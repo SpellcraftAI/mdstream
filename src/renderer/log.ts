@@ -6,7 +6,7 @@ export function labelToken(type: Token): typeof TOKEN_LABEL[Token] {
   return TOKEN_LABEL[type]
 }
 
-export const LogRenderer: Renderer<undefined> = {
+export const createLogRenderer = (): Renderer<undefined> => ({
   data: undefined,
   addToken: (_, type) => {
     console.log("addToken:", labelToken(type))
@@ -20,7 +20,7 @@ export const LogRenderer: Renderer<undefined> = {
   setAttr:  (_, type, value) => {
     console.log("setAttr: %s=\"%s\"", serializeAttr(type), value)
   },
-}
+})
 
 const TOKEN_LABEL: Readonly<Record<Token, string>> = {
   [Token.DOCUMENT]: "Document",

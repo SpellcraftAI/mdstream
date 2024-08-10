@@ -28,7 +28,7 @@
 
   const container = /** @type {HTMLElement} */(document.getElementById("markdown"))
   const renderer = smd.createHTMLRenderer(container)
-  // const renderer = mds.logger_renderer
+  // const renderer = mds.createLogRenderer()
   const parser = smd.createParser(renderer)
 
   let i = 0

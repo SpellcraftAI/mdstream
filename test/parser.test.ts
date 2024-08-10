@@ -2,7 +2,7 @@ import * as t from "bun:test"
 
 import type { Children } from "@/types"
 import { Token, Attr } from "@/tokens"
-import { labelToken } from "@/renderer/logging"
+import { labelToken } from "@/renderer/log"
 import { createParser, endParser, writeToParser } from "@/parser"
 
 import type { TestRendererNode  } from "./types"
