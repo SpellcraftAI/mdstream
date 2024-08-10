@@ -2,8 +2,8 @@ import type { TestAddText, TestAddToken, TestEndToken, TestRenderer, TestRendere
 import { expect } from "bun:test"
 
 import { Token } from "@/tokens"
-import { token_to_string } from "@/parser"
 import type { Children } from "@/renderer"
+import { labelToken } from "@/logger"
 
 export function test_renderer(): TestRenderer {
   const root: TestRendererNode = {
@@ -86,7 +86,7 @@ export function compare_push_node(node: TestRendererNode, lines: string[], len: 
 }
 
 export function compare_push_type(type: Token, lines: string[], len: number, h: number): void {
-  lines.push(compare_pad(len, h) + "\u001b[36m" + token_to_string(type) + "\u001b[0m")
+  lines.push(compare_pad(len, h) + "\u001b[36m" + labelToken(type) + "\u001b[0m")
 }
 
 export function compare_child<T extends string | TestRendererNode>(

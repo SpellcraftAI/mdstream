@@ -1,5 +1,5 @@
 import type { Renderer } from "./renderer"
-import { Token, Attr, TokenLabel, AttrLabel } from "./tokens"
+import { Token, Attr, AttrLabel } from "./tokens"
 
 const TOKEN_ARRAY_CAP = 24
 
@@ -39,10 +39,6 @@ export function createParser<T>(renderer: Renderer<T>): Parser<T> {
     indent    : "",
     indent_len: 0,
   }
-}
-
-export function token_to_string(type: Token): typeof TokenLabel[Token] {
-  return TokenLabel[type]
 }
 
 export function attr_to_html_attr(type: Attr): typeof AttrLabel[Attr] {

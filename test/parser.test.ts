@@ -2,7 +2,8 @@ import * as t from "bun:test"
 
 import type { Children } from "@/types"
 import { Token, Attr } from "@/tokens"
-import { createParser, parser_end, parser_write, token_to_string } from "@/parser"
+import { labelToken } from "@/logger"
+import { createParser, parser_end, parser_write } from "@/parser"
 
 import type { TestRendererNode  } from "./types"
 import { assert_children, test_renderer } from "./utils"
@@ -432,7 +433,7 @@ for (const {type, c} of [
   }
 
   test_single_write(
-    token_to_string(type),
+    labelToken(type),
     c + "foo" + c,
     [{
       type    : Token.PARAGRAPH,
@@ -443,7 +444,7 @@ for (const {type, c} of [
     }]
   )
 
-  test_single_write(token_to_string(type) + " space after begin",
+  test_single_write(labelToken(type) + " space after begin",
     "a " + c + " b" + c,
     [{
       type    : Token.PARAGRAPH,
@@ -451,7 +452,7 @@ for (const {type, c} of [
     }]
   )
 
-  test_single_write(token_to_string(type) + " with Code",
+  test_single_write(labelToken(type) + " with Code",
     c + "`foo`" + c,
     [{
       type    : Token.PARAGRAPH,
@@ -465,7 +466,7 @@ for (const {type, c} of [
     }]
   )
 
-  test_single_write(token_to_string(type) + " new Paragraph",
+  test_single_write(labelToken(type) + " new Paragraph",
     "foo\n\n"+
 		c + "bar" + c,
     [{
@@ -480,7 +481,7 @@ for (const {type, c} of [
     }]
   )
 
-  test_single_write(`Escape ${token_to_string(type)} Begin`,
+  test_single_write(`Escape ${labelToken(type)} Begin`,
     e + "foo",
     [{
       type    : Token.PARAGRAPH,
@@ -488,7 +489,7 @@ for (const {type, c} of [
     }]
   )
 
-  test_single_write(`Escape ${token_to_string(type)} End`,
+  test_single_write(`Escape ${labelToken(type)} End`,
     c + "foo" + e,
     [{
       type    : Token.PARAGRAPH,
