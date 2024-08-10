@@ -2,7 +2,6 @@ import type { Renderer } from "@/types"
 import { Token, Attr } from "@/tokens"
 import type { ChalkInstance } from "chalk"
 import chalk from "chalk"
-import { labelToken } from "./log"
 
 export interface ANSIRendererData {
   nodes: Array<string>;
