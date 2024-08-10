@@ -6,5 +6,5 @@ https://github.com/thetarnav/streaming-markdown
 */
 
 export { Token } from "./tokens"
-export { createParser, parser_write, parser_end } from "./parser"
-export { default_renderer } from "./renderer"
+export { createParser, writeToParser, endParser } from "./parser"
+export { createDefaultRenderer } from "./renderer/default"

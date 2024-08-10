@@ -5,8 +5,8 @@ import * as url  from "node:url"
 import * as http from "node:http"
 import * as ws   from "ws"
 
-const dirname         = path.dirname(url.fileURLToPath(import.meta.url))
-const index_html_path = path.join(dirname, "index.html")
+const DIRNAME         = path.dirname(url.fileURLToPath(import.meta.url))
+const INDEX_HTML_PATH = path.join(DIRNAME, "index.html")
 
 const HTTP_PORT       = 3000
 const WEB_SOCKET_PORT = 8080
@@ -14,7 +14,7 @@ const WEB_SOCKET_PORT = 8080
 const WEB_SOCKET_URL  = "ws://localhost:" + WEB_SOCKET_PORT
 const MESSAGE_RELOAD  = "reload"
 
-const reload_client_script = /*html*/`<script>
+const RELOAD_CLIENT_SCRIPT = /*html*/`<script>
 new WebSocket("${WEB_SOCKET_URL}").addEventListener("message",
 	event => event.data === "${MESSAGE_RELOAD}" && location.reload(),
 )
@@ -24,7 +24,7 @@ function main() {
   const server = makeHttpServer(requestListener)
   const wss = new ws.WebSocketServer({port: WEB_SOCKET_PORT})
 	
-  const watched_paths = new Set<string>()
+  const watchedPaths = new Set<string>()
 	
   function exit() {
     void server.close()
@@ -45,16 +45,16 @@ function main() {
   }
 	
   function clearWatchedFiles() {
-    for (const filename of watched_paths) fs.unwatchFile(filename)
-    watched_paths.clear()
+    for (const filename of watchedPaths) fs.unwatchFile(filename)
+    watchedPaths.clear()
   }
 	
   const WATCH_FILE_OPTIONS = /** @type {const} */({interval: 200})
 	
   function watchFile(filepath: string) {
-    if (watched_paths.has(filepath)) return
+    if (watchedPaths.has(filepath)) return
 	
-    watched_paths.add(filepath)
+    watchedPaths.add(filepath)
     void fs.watchFile(filepath, WATCH_FILE_OPTIONS, onFileChange)
   }
 	
@@ -66,20 +66,20 @@ function main() {
     if (!req.url || req.method !== "GET") return end404(req, res)
 
     if (req.url === "/") {
-      const html = await fsp.readFile(index_html_path, "utf8")
+      const html = await fsp.readFile(INDEX_HTML_PATH, "utf8")
       void res.writeHead(200, {"Content-Type": "text/html; charset=UTF-8"})
-      void res.end(html + reload_client_script)
-      watchFile(index_html_path)
+      void res.end(html + RELOAD_CLIENT_SCRIPT)
+      watchFile(INDEX_HTML_PATH)
       return
     }
 	
-    let url_path = path.join(dirname, toWebFilepath(req.url))
+    let urlPath = path.join(DIRNAME, toWebFilepath(req.url))
 
-    try {await fsp.access(url_path)}
+    try {await fsp.access(urlPath)}
     catch (e) {return end404(req, res)}
 	
-    watchFile(url_path)
-    streamStatic(req, res, url_path)
+    watchFile(urlPath)
+    streamStatic(req, res, urlPath)
   }
 }
 
@@ -116,11 +116,11 @@ function end404(req: http.IncomingMessage, res: http.ServerResponse) {
   console.log(`${req.method} ${req.url} 404`)
 }
 
-function toExt(filepath: string) {
+function getExt(filepath: string) {
   return path.extname(filepath).substring(1).toLowerCase()
 }
 
-function mimeType(ext: string) {
+function getMimeType(ext: string) {
   switch (ext) {
   case "html": return "text/html; charset=UTF-8"
   case "js":
@@ -140,14 +140,14 @@ function mimeType(ext: string) {
 /**
  * Checks if the accept header string matches the given mime type.
  */
-function matchesAcceptsHeader(accept: string | undefined, mime_type: string) {
+function matchesAcceptsHeader(accept: string | undefined, mimeType: string) {
   if (accept === undefined) return true
 
-  const l = mime_type.length
+  const l = mimeType.length
   let i = 0
    
   while (true) {
-    const j = accept.indexOf(mime_type, i)
+    const j = accept.indexOf(mimeType, i)
     const d = j - i
     if (d === -1) break
     if (d === 0) return true
@@ -168,14 +168,14 @@ function matchesAcceptsHeader(accept: string | undefined, mime_type: string) {
 }
 
 function streamStatic(req: http.IncomingMessage, res: http.ServerResponse, filepath: string) {
-  const ext = toExt(filepath)
-  const mime_type = mimeType(ext)
+  const ext = getExt(filepath)
+  const mimeType = getMimeType(ext)
 
-  if (!matchesAcceptsHeader(req.headers.accept, mime_type)) {
+  if (!matchesAcceptsHeader(req.headers.accept, mimeType)) {
     return end404(req, res)
   }
 
-  void res.writeHead(200, {"Content-Type": mime_type})
+  void res.writeHead(200, {"Content-Type": mimeType})
 
   const stream = fs.createReadStream(filepath)
   void stream.pipe(res)

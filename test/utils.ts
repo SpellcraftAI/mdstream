@@ -2,7 +2,7 @@ import type { TestRenderer, TestRendererNode } from "./types"
 import { expect } from "bun:test"
 
 import { Token } from "@/tokens"
-import type { Children } from "@/renderer"
+import type { Children } from "@/renderer/types"
 import { labelToken } from "@/logger"
 
 export function createTestRenderer(): TestRenderer {
@@ -11,26 +11,26 @@ export function createTestRenderer(): TestRenderer {
     children: []
   }
   return {
-    add_token: (data, type) => {
+    addToken: (data, type) => {
       const node: TestRendererNode = { type, children: [] }
       data.node.children.push(node)
-      data.parent_map.set(node, data.node)
+      data.parentMap.set(node, data.node)
       data.node = node
     },
-    end_token: (data) => {
-      const parent = data.parent_map.get(data.node)
+    endToken: (data) => {
+      const parent = data.parentMap.get(data.node)
       // notEqual(parent, undefined, "Parent not found");
       expect(parent, "Parent not found").not.toBe(undefined)
       data.node = parent as TestRendererNode
     },
-    set_attr: (data, type, value) => {
+    setAttr: (data, type, value) => {
       if (data.node.attrs === undefined) {
         data.node.attrs = { [type]: value }
       } else {
         data.node.attrs[type] = value
       }
     },
-    add_text: (data, text) => {
+    addText: (data, text) => {
       const lastChild = data.node.children[data.node.children.length - 1]
       if (typeof lastChild === "string") {
         data.node.children[data.node.children.length - 1] = lastChild + text
@@ -39,7 +39,7 @@ export function createTestRenderer(): TestRenderer {
       }
     },
     data: {
-      parent_map: new Map(),
+      parentMap: new Map(),
       root: root,
       node: root,
     },
@@ -146,12 +146,12 @@ export function compareChild<T extends string | TestRendererNode>(
     return false
   }
 
-  return compare_children(actual.children, expected.children, lines, len + 1)
+  return compareChildren(actual.children, expected.children, lines, len + 1)
 }
 
-export function compare_children<T extends string | TestRendererNode>(
+export function compareChildren<T extends string | TestRendererNode>(
   children: Children<T>, 
-  expected_children: Children<T>, 
+  expectedChildren: Children<T>, 
   lines: string[], 
   len: number
 ): boolean {
@@ -159,11 +159,11 @@ export function compare_children<T extends string | TestRendererNode>(
 
   let i = 0
   for (; i < children.length; i += 1) {
-    result = compareChild(children[i], expected_children[i], lines, len) && result
+    result = compareChild(children[i], expectedChildren[i], lines, len) && result
   }
 
-  for (; i < expected_children.length; i += 1) {
-    compareChild(undefined, expected_children[i], lines, len)
+  for (; i < expectedChildren.length; i += 1) {
+    compareChild(undefined, expectedChildren[i], lines, len)
     result = false
   }
 
@@ -172,10 +172,10 @@ export function compare_children<T extends string | TestRendererNode>(
 
 export function expectChildren<T extends string | TestRendererNode>(
   children: Children<T>, 
-  expected_children: Children<T>
+  expectedChildren: Children<T>
 ): void {
   const lines: string[] = []
-  const result = compare_children(children, expected_children, lines, 0)
+  const result = compareChildren(children, expectedChildren, lines, 0)
   if (!result) {
     const stl = Error.stackTraceLimit
     Error.stackTraceLimit = 0

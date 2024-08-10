@@ -23,24 +23,24 @@
 <script type="module">
   import * as smd from "./dist/index.js"
 
-  const source_res = await fetch("readme.md")
-  const source_txt = await source_res.text()
+  const response = await fetch("readme.md")
+  const source = await response.text()
 
   const container = /** @type {HTMLElement} */(document.getElementById("markdown"))
-  const renderer = smd.default_renderer(container)
+  const renderer = smd.createDefaultRenderer(container)
   // const renderer = mds.logger_renderer
   const parser = smd.createParser(renderer)
 
   let i = 0
-  while (i < source_txt.length) {
+  while (i < source.length) {
     const length = Math.floor(Math.random() * 20) + 1
     const delay = Math.floor(Math.random() * 80) + 10
-    const chunk = source_txt.slice(i, i += length)
+    const chunk = source.slice(i, i += length)
     await new Promise(resolve => setTimeout(resolve, delay))
-    smd.parser_write(parser, chunk)
+    smd.writeToParser(parser, chunk)
   }
 
-  smd.parser_end(parser)
+  smd.endParser(parser)
 </script>
 
 </html>

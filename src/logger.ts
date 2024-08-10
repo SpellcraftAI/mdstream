@@ -1,6 +1,6 @@
-import type { Renderer, RendererAddText, RendererAddToken, RendererEndToken, RendererSetAttr } from "./renderer"
-import { Token } from "./tokens";
-import { attr_to_html_attr } from "./parser"
+import type { Renderer, RendererAddText, RendererAddToken, RendererEndToken, RendererSetAttr } from "./renderer/types"
+import { Token } from "./tokens"
+import { serializeAttr } from "./parser"
 
 export type LoggerRendererData = undefined;
 
@@ -14,19 +14,19 @@ export function labelToken(type: Token): typeof TokenLabel[Token] {
   return TokenLabel[type]
 }
 
-export const logger_renderer: LoggerRenderer = {
-  data:      undefined,
-  add_token: (_, type) => {
-    console.log("add_token:", labelToken(type))
+export const createLoggerRenderer: LoggerRenderer = {
+  data: undefined,
+  addToken: (_, type) => {
+    console.log("addToken:", labelToken(type))
   },
-  end_token: (_) => {
-    console.log("end_token")
+  endToken: (_) => {
+    console.log("endToken")
   },
-  add_text:  (_, text) => {
-    console.log("add_text: \"%s\"", text)
+  addText:  (_, text) => {
+    console.log("addText: \"%s\"", text)
   },
-  set_attr:  (_, type, value) => {
-    console.log("set_attr: %s=\"%s\"", attr_to_html_attr(type), value)
+  setAttr:  (_, type, value) => {
+    console.log("setAttr: %s=\"%s\"", serializeAttr(type), value)
   },
 }
 

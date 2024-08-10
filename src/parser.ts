@@ -1,4 +1,4 @@
-import type { Renderer } from "./renderer"
+import type { Renderer } from "./renderer/types"
 import { Token, Attr, AttrLabel } from "./tokens"
 
 const TOKEN_ARRAY_CAP = 24
@@ -12,12 +12,12 @@ export interface Parser<T> {
   token: number;
   spaces: Uint8Array;
   indent: string;
-  indent_len: number;
-  code_fence_body: 0 | 1;
-  backticks_count: number;
-  blockquote_idx: number;
-  hr_char: string;
-  hr_chars: number;
+  indentLength: number;
+  codeFenceBody: 0 | 1;
+  backticksCount: number;
+  blockquoteIndex: number;
+  hrChar: string;
+  hrChars: number;
 }
 
 export function createParser<T>(renderer: Renderer<T>): Parser<T> {
@@ -30,57 +30,57 @@ export function createParser<T>(renderer: Renderer<T>): Parser<T> {
     tokens    : tokens,
     len       : 0,
     token     : Token.DOCUMENT,
-    code_fence_body: 0,
-    blockquote_idx: 0,
-    hr_char   : "",
-    hr_chars  : 0,
-    backticks_count: 0,
+    codeFenceBody: 0,
+    blockquoteIndex: 0,
+    hrChar   : "",
+    hrChars  : 0,
+    backticksCount: 0,
     spaces    : new Uint8Array(TOKEN_ARRAY_CAP),
     indent    : "",
-    indent_len: 0,
+    indentLength: 0,
   }
 }
 
-export function attr_to_html_attr(type: Attr): typeof AttrLabel[Attr] {
+export function serializeAttr(type: Attr): typeof AttrLabel[Attr] {
   return AttrLabel[type]
 }
 
 /**
  * Finish rendering the markdown - flushes any remaining text.
  */
-export function parser_end<T>(p: Parser<T>): void {
+export function endParser<T>(p: Parser<T>): void {
   if (p.pending.length > 0) {
-    parser_write(p, "\n")
+    writeToParser(p, "\n")
   }
 }
 
-function add_text<T>(p: Parser<T>) {
+function addText<T>(p: Parser<T>) {
   if (p.text.length === 0) return
   console.assert(p.len > 0, "Never adding text to root")
-  p.renderer.add_text(p.renderer.data, p.text)
+  p.renderer.addText(p.renderer.data, p.text)
   p.text = ""
 }
 
-function end_token<T>(p: Parser<T>) {
+function endToken<T>(p: Parser<T>) {
   console.assert(p.len > 0, "No nodes to end")
   p.len -= 1
   p.token = /** @type {Token} */ (p.tokens[p.len])
-  p.renderer.end_token(p.renderer.data)
+  p.renderer.endToken(p.renderer.data)
 }
 
-function add_token<T>(p: Parser<T>, token: Token) {
+function addToken<T>(p: Parser<T>, token: Token) {
   p.len += 1
   p.tokens[p.len] = token
   p.token = token
-  p.renderer.add_token(p.renderer.data, token)
+  p.renderer.addToken(p.renderer.data, token)
 }
 
-function idx_of_token<T>(p: Parser<T>, token: Token, start_idx: number) {
-  while (start_idx <= p.len) {
-    if (p.tokens[start_idx] & token) {
-      return start_idx
+function indexOfToken<T>(p: Parser<T>, token: Token, startIndex: number) {
+  while (startIndex <= p.len) {
+    if (p.tokens[startIndex] & token) {
+      return startIndex
     }
-    start_idx += 1
+    startIndex += 1
   }
   return -1
 }
@@ -88,12 +88,13 @@ function idx_of_token<T>(p: Parser<T>, token: Token, start_idx: number) {
 /**
  * End tokens until the parser has the given length.
  */
-function end_tokens_to_len<T>(p: Parser<T>, len: number) {
+function endTokensUntilLength<T>(p: Parser<T>, len: number) {
   while (p.len > len) {
-    end_token(p)
+    endToken(p)
   }
 }
-function continue_or_add_list<T>(p: Parser<T>, list_token: Token) {
+
+function continueOrAddList<T>(p: Parser<T>, listToken: Token) {
   /* will create a new list inside the last item
 	   if the amount of spaces is greater than the last one (with prefix)
 	   1. foo
@@ -102,32 +103,34 @@ function continue_or_add_list<T>(p: Parser<T>, list_token: Token) {
 	      12. qux    <- cannot be nested in "baz" or "bar",
 	                    so it's a new list in "foo"
 	*/
-  let list_idx = -1
-  let item_idx = -1
+  let listIndex = -1
+  let itemIndex = -1
 
-  for (let i = p.blockquote_idx+1; i <= p.len; i += 1) {
+  for (let i = p.blockquoteIndex + 1; i <= p.len; i++) {
     if (p.tokens[i] & Token.LIST_ITEM) {
-      if (p.tokens[i-1] & list_token) {
-        list_idx = i-1
+      if (p.tokens[i-1] & listToken) {
+        listIndex = i-1
       }
-      if (p.indent_len < p.spaces[i]) {
-        item_idx = -1
+
+      if (p.indentLength < p.spaces[i]) {
+        itemIndex = -1
         break
       }
-      item_idx = i
+
+      itemIndex = i
     }
   }
 
-  if (item_idx === -1) {
-    if (list_idx === -1) {
-      end_tokens_to_len(p, p.blockquote_idx)
-      add_token(p, list_token)
+  if (itemIndex === -1) {
+    if (listIndex === -1) {
+      endTokensUntilLength(p, p.blockquoteIndex)
+      addToken(p, listToken)
     } else {
-      end_tokens_to_len(p, list_idx)
+      endTokensUntilLength(p, listIndex)
     }
   } else {
-    end_tokens_to_len(p, item_idx)
-    add_token(p, list_token)
+    endTokensUntilLength(p, itemIndex)
+    addToken(p, listToken)
   }
 }
 
@@ -135,20 +138,20 @@ function continue_or_add_list<T>(p: Parser<T>, list_token: Token) {
  * Create a new list
  * or continue the last one
  */
-function add_list_item<T>(p: Parser<T>, prefix_length: number) {
-  add_token(p, Token.LIST_ITEM)
-  p.spaces[p.len] = p.indent_len + prefix_length
-  clear_root_pending(p)
+function addListItem<T>(p: Parser<T>, prefixLength: number) {
+  addToken(p, Token.LIST_ITEM)
+  p.spaces[p.len] = p.indentLength + prefixLength
+  clearRootPending(p)
   p.token = Token.MAYBE_TASK
 }
 
-function clear_root_pending<T>(p: Parser<T>) {
+function clearRootPending<T>(p: Parser<T>) {
   p.indent = ""
-  p.indent_len = 0
+  p.indentLength = 0
   p.pending = ""
 }
 
-function is_digit(charcode: number) {
+function isDigit(charcode: number) {
   switch (charcode) {
   case 48: case 49: case 50: case 51: case 52:
   case 53: case 54: case 55: case 56: case 57:
@@ -161,12 +164,12 @@ function is_digit(charcode: number) {
 /**
  * Parse and render another chunk of markdown.
  */
-export function parser_write<T>(p: Parser<T>, chunk: string): void {
+export function writeToParser<T>(p: Parser<T>, chunk: string): void {
   for (const char of chunk) {
-    const pending_with_char = p.pending + char
+    const pendingWithChar = p.pending + char
 		
     /*
-		Token specific checks
+		 Token specific checks
 		*/
     switch (p.token) {
     case Token.LINE_BREAK:
@@ -181,18 +184,18 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       case " ":
         p.pending = char
         p.indent += " "
-        p.indent_len += 1
+        p.indentLength += 1
         continue
       case "\t":
         p.pending = char
         p.indent += "\t"
-        p.indent_len += 4
+        p.indentLength += 4
         continue
         /* Ignore newlines in root */
       case "\n":
-        end_tokens_to_len(p, p.blockquote_idx)
-        p.blockquote_idx = 0
-        p.backticks_count = 0
+        endTokensUntilLength(p, p.blockquoteIndex)
+        p.blockquoteIndex = 0
+        p.backticksCount = 0
         p.pending = char
         continue
         /* Heading */
@@ -200,35 +203,35 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
         switch (char) {
         case "#":
           if (p.pending.length < 6) {
-            p.pending = pending_with_char
+            p.pending = pendingWithChar
             continue
           }
           break // fail
         case " ":
           switch (p.pending.length) {
           case 1: 
-            add_token(p, Token.HEADING_1) 
-            clear_root_pending(p) 
+            addToken(p, Token.HEADING_1) 
+            clearRootPending(p) 
             continue
           case 2: 
-            add_token(p, Token.HEADING_2) 
-            clear_root_pending(p) 
+            addToken(p, Token.HEADING_2) 
+            clearRootPending(p) 
             continue
           case 3: 
-            add_token(p, Token.HEADING_3) 
-            clear_root_pending(p) 
+            addToken(p, Token.HEADING_3) 
+            clearRootPending(p) 
             continue
           case 4: 
-            add_token(p, Token.HEADING_4) 
-            clear_root_pending(p) 
+            addToken(p, Token.HEADING_4) 
+            clearRootPending(p) 
             continue
           case 5: 
-            add_token(p, Token.HEADING_5) 
-            clear_root_pending(p) 
+            addToken(p, Token.HEADING_5) 
+            clearRootPending(p) 
             continue
           case 6: 
-            add_token(p, Token.HEADING_6) 
-            clear_root_pending(p) 
+            addToken(p, Token.HEADING_6) 
+            clearRootPending(p) 
             continue
           }
           console.assert(false, "Should not reach here")
@@ -236,22 +239,22 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
         break // fail
         /* Blockquote */
       case ">": {
-        const next_blockquote_idx = idx_of_token(p, Token.BLOCKQUOTE, p.blockquote_idx+1)
+        const nextBlockIndex = indexOfToken(p, Token.BLOCKQUOTE, p.blockquoteIndex+1)
 				
         /*
-				Only when there is no blockquote to the right of blockquote_idx
+				Only when there is no blockquote to the right of blockquoteIndex
 				a new blockquote can be created
 				*/
-        if (next_blockquote_idx === -1) {
-          end_tokens_to_len(p, p.blockquote_idx)
-          p.blockquote_idx += 1
-          p.backticks_count = 0
-          add_token(p, Token.BLOCKQUOTE)
+        if (nextBlockIndex === -1) {
+          endTokensUntilLength(p, p.blockquoteIndex)
+          p.blockquoteIndex += 1
+          p.backticksCount = 0
+          addToken(p, Token.BLOCKQUOTE)
         } else {
-          p.blockquote_idx = next_blockquote_idx
+          p.blockquoteIndex = nextBlockIndex
         }
 				
-        clear_root_pending(p)
+        clearRootPending(p)
         p.pending = char
         continue
       }
@@ -261,31 +264,31 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       case "-":
       case "*":
       case "_":
-        if (p.hr_chars === 0) {
+        if (p.hrChars === 0) {
           console.assert(p.pending.length === 1, "Pending should be one character")
-          p.hr_chars = 1
-          p.hr_char = p.pending
+          p.hrChars = 1
+          p.hrChar = p.pending
         }
 
-        if (p.hr_chars > 0) {
+        if (p.hrChars > 0) {
           switch (char) {
-          case p.hr_char:
-            p.hr_chars += 1
-            p.pending = pending_with_char
+          case p.hrChar:
+            p.hrChars += 1
+            p.pending = pendingWithChar
             continue
           case " ":
-            p.pending = pending_with_char
+            p.pending = pendingWithChar
             continue
           case "\n":
-            if (p.hr_chars < 3) break
-            p.renderer.add_token(p.renderer.data, Token.RULE)
-            p.renderer.end_token(p.renderer.data)
+            if (p.hrChars < 3) break
+            p.renderer.addToken(p.renderer.data, Token.RULE)
+            p.renderer.endToken(p.renderer.data)
             p.pending = ""
-            p.hr_chars = 0
+            p.hrChars = 0
             continue
           }
 
-          p.hr_chars = 0
+          p.hrChars = 0
         }
 
         /* Unordered list 
@@ -296,9 +299,9 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
         if ("_" !== p.pending[0] &&
 				    " " === p.pending[1]
         ) {
-          continue_or_add_list(p, Token.LIST_UNORDERED)
-          add_list_item(p, 2)
-          parser_write(p, pending_with_char.slice(2))
+          continueOrAddList(p, Token.LIST_UNORDERED)
+          addListItem(p, 2)
+          writeToParser(p, pendingWithChar.slice(2))
           continue
         }
 
@@ -310,11 +313,11 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 				*/
         if (p.pending.length < 3) {
           if ("`" === char) {
-            p.pending = pending_with_char
-            p.backticks_count = pending_with_char.length
+            p.pending = pendingWithChar
+            p.backticksCount = pendingWithChar.length
             continue
           }
-          p.backticks_count = 0
+          p.backticksCount = 0
           break // fail
         }
 
@@ -323,35 +326,35 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
           /*  ````?
 						   ^
 					*/
-          if (p.pending.length === p.backticks_count) {
-            p.pending = pending_with_char
-            p.backticks_count = pending_with_char.length
+          if (p.pending.length === p.backticksCount) {
+            p.pending = pendingWithChar
+            p.backticksCount = pendingWithChar.length
           }
           /*  ```code`
 							   ^
 					*/
           else {
-            add_token(p, Token.PARAGRAPH)
-            clear_root_pending(p)
-            p.backticks_count = 0
-            parser_write(p, pending_with_char)
+            addToken(p, Token.PARAGRAPH)
+            clearRootPending(p)
+            p.backticksCount = 0
+            writeToParser(p, pendingWithChar)
           }
           continue
         case "\n":
           /*  ```lang\n
 								^
 					*/
-          add_token(p, Token.CODE_FENCE)
-          if (p.pending.length > p.backticks_count) {
-            p.renderer.set_attr(p.renderer.data, Attr.LANG, p.pending.slice(p.backticks_count))
+          addToken(p, Token.CODE_FENCE)
+          if (p.pending.length > p.backticksCount) {
+            p.renderer.setAttr(p.renderer.data, Attr.LANG, p.pending.slice(p.backticksCount))
           }
-          clear_root_pending(p)
+          clearRootPending(p)
           continue
         default:
           /*  ```lang\n
 							^
 					*/
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
           continue
         }
         /*
@@ -361,8 +364,8 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       case "+": 
         if (" " !== char) break // fail
 
-        continue_or_add_list(p, Token.LIST_UNORDERED)
-        add_list_item(p, 2)
+        continueOrAddList(p, Token.LIST_UNORDERED)
+        addListItem(p, 2)
         continue
         /* List Ordered */
       case "0": case "1": case "2": case "3": case "4":
@@ -374,35 +377,35 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
         if ("." === p.pending[p.pending.length-1]) {
           if (" " !== char) break // fail
 
-          continue_or_add_list(p, Token.LIST_ORDERED)
+          continueOrAddList(p, Token.LIST_ORDERED)
           if (p.pending !== "1.") {
-            p.renderer.set_attr(p.renderer.data, Attr.START, p.pending.slice(0, -1))
+            p.renderer.setAttr(p.renderer.data, Attr.START, p.pending.slice(0, -1))
           }
-          add_list_item(p, p.pending.length+1)
+          addListItem(p, p.pending.length+1)
           continue
         } else {
-          const char_code = char.charCodeAt(0)
-          if (46 === char_code || // '.'
-					    is_digit(char_code) // 0-9
+          const charCode = char.charCodeAt(0)
+          if (46 === charCode || // '.'
+					    isDigit(charCode) // 0-9
           ) {
-            p.pending = pending_with_char
+            p.pending = pendingWithChar
             continue
           }
         }
         break // fail
       }
 
-      let to_write = pending_with_char
+      let toWrite = pendingWithChar
 
       /* Add line break */
       if (p.token & Token.LINE_BREAK) {
         /* Add a line break and continue in previous token */
         p.token = p.tokens[p.len]
-        p.renderer.add_token(p.renderer.data, Token.LINE_BREAK)
-        p.renderer.end_token(p.renderer.data)
+        p.renderer.addToken(p.renderer.data, Token.LINE_BREAK)
+        p.renderer.endToken(p.renderer.data)
       }
       /* Code Block */
-      else if (p.indent_len >= 4) {
+      else if (p.indentLength >= 4) {
         /*
 				Case where there are additional spaces
 				after the indent that makes the code block
@@ -415,26 +418,27 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 				^^-----indent
 				   ^^^-part of code
 				*/
-        let code_start = 0
-        for (; code_start < 4; code_start += 1) {
-          if (p.indent[code_start] === "\t") {
-            code_start = code_start+1
+        let codeStart = 0
+        for (; codeStart < 4; codeStart += 1) {
+          if (p.indent[codeStart] === "\t") {
+            codeStart = codeStart+1
             break
           }
         }
-        to_write = p.indent.slice(code_start) + pending_with_char
-        add_token(p, Token.CODE_BLOCK)
+
+        toWrite = p.indent.slice(codeStart) + pendingWithChar
+        addToken(p, Token.CODE_BLOCK)
       }
       /* Paragraph */
       else {
-        add_token(p, Token.PARAGRAPH)
+        addToken(p, Token.PARAGRAPH)
       }
 			
-      clear_root_pending(p)
-      parser_write(p, to_write)
+      clearRootPending(p)
+      writeToParser(p, toWrite)
       continue
     case Token.CODE_BLOCK:
-      switch (pending_with_char) {
+      switch (pendingWithChar) {
       case "\n    ":
       case "\n   \t":
       case "\n  \t":
@@ -447,12 +451,12 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       case "\n ":
       case "\n  ":
       case "\n   ":
-        p.pending = pending_with_char
+        p.pending = pendingWithChar
         continue
       default:
         if (p.pending.length !== 0) {
-          add_text(p)
-          end_token(p)
+          addText(p)
+          endToken(p)
           p.pending = char
         } else {
           p.text += char
@@ -462,49 +466,49 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
     case Token.CODE_FENCE:
       switch (char) {
       case "`":
-        if (pending_with_char.length ===
-					p.backticks_count + p.code_fence_body // 0 or 1 for \n
+        if (pendingWithChar.length ===
+					p.backticksCount + p.codeFenceBody // 0 or 1 for \n
         ) {
-          add_text(p)
-          end_token(p)
+          addText(p)
+          endToken(p)
           p.pending = ""
-          p.backticks_count = 0
-          p.code_fence_body = 0
+          p.backticksCount = 0
+          p.codeFenceBody = 0
         } else {
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
         }
         continue
       case "\n":
         p.text   += p.pending
         p.pending = char
-        p.code_fence_body = 1
+        p.codeFenceBody = 1
         continue
       default:
-        p.text   += pending_with_char
+        p.text   += pendingWithChar
         p.pending = ""
-        p.code_fence_body = 1
+        p.codeFenceBody = 1
         continue
       }
     case Token.CODE_INLINE:
       switch (char) {
       case "`":
-        if (pending_with_char.length ===
-				    p.backticks_count + Number(p.pending[0] === " ") // 0 or 1 for space
+        if (pendingWithChar.length ===
+				    p.backticksCount + Number(p.pending[0] === " ") // 0 or 1 for space
         ) {
-          add_text(p)
-          end_token(p)
+          addText(p)
+          endToken(p)
           p.pending = ""
-          p.backticks_count = 0
+          p.backticksCount = 0
         } else {
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
         }
         continue
       case "\n":
         p.text += p.pending
         p.pending = ""
         p.token = Token.LINE_BREAK
-        p.blockquote_idx = 0
-        add_text(p)
+        p.blockquoteIndex = 0
+        addText(p)
         continue
         /* Trim space before ` */
       case " ":
@@ -512,7 +516,7 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
         p.pending = char
         continue
       default:
-        p.text += pending_with_char
+        p.text += pendingWithChar
         p.pending = ""
         continue
       }
@@ -521,30 +525,30 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       switch (p.pending.length) {
       case 0:
         if ("[" !== char) break // fail
-        p.pending = pending_with_char
+        p.pending = pendingWithChar
         continue
       case 1:
         if (" " !== char && "x" !== char) break // fail
-        p.pending = pending_with_char
+        p.pending = pendingWithChar
         continue
       case 2:
         if ("]" !== char) break // fail
-        p.pending = pending_with_char
+        p.pending = pendingWithChar
         continue
       case 3:
         if (" " !== char) break // fail
-        p.renderer.add_token(p.renderer.data, Token.CHECKBOX)
+        p.renderer.addToken(p.renderer.data, Token.CHECKBOX)
         if ("x" === p.pending[1]) {
-          p.renderer.set_attr(p.renderer.data, Attr.CHECKED, "")
+          p.renderer.setAttr(p.renderer.data, Attr.CHECKED, "")
         }
-        p.renderer.end_token(p.renderer.data)
+        p.renderer.endToken(p.renderer.data)
         p.pending = " "
         continue
       }
 
       p.token = p.tokens[p.len]
       p.pending = ""
-      parser_write(p, pending_with_char)
+      writeToParser(p, pendingWithChar)
       continue
     case Token.STRONG_AST:
     case Token.STRONG_UND: {
@@ -556,19 +560,19 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       }
 
       if (symbol === p.pending) {
-        add_text(p)
+        addText(p)
         /* **Bold**
 						  ^
 				*/
         if (symbol === char) {
-          end_token(p)
+          endToken(p)
           p.pending = ""
           continue
         }
         /* **Bold*Bold->Em*
 						  ^
 				*/
-        add_token(p, italic)
+        addToken(p, italic)
         p.pending = char
         continue
       }
@@ -592,14 +596,14 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					   With the help of the next character
 					*/
           if (p.tokens[p.len-1] === strong) {
-            p.pending = pending_with_char
+            p.pending = pendingWithChar
           }
           /* *em**bold
 					       ^
 					*/
           else {
-            add_text(p)
-            add_token(p, strong)
+            addText(p)
+            addToken(p, strong)
             p.pending = ""
           }
         }
@@ -607,21 +611,21 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					   ^
 				*/
         else {
-          add_text(p)
-          end_token(p)
+          addText(p)
+          endToken(p)
           p.pending = char
         }
         continue
       case symbol+symbol:
         const italic = p.token
-        add_text(p)
-        end_token(p)
-        end_token(p)
+        addText(p)
+        endToken(p)
+        endToken(p)
         /* ***bold>em**em* or **bold*bold>em***
 				               ^                      ^
 				*/
         if (symbol !== char) {
-          add_token(p, italic)
+          addToken(p, italic)
           p.pending = char
         } else {
           p.pending = ""
@@ -631,32 +635,32 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       break
     }
     case Token.STRIKE:
-      if ("~~" === pending_with_char) {
-        add_text(p)
-        end_token(p)
+      if ("~~" === pendingWithChar) {
+        addText(p)
+        endToken(p)
         p.pending = ""
         continue
       }
       break
       /* Raw URLs */
     case Token.MAYBE_URL:
-      if ("http://"  === pending_with_char ||
-				"https://" === pending_with_char
+      if ("http://"  === pendingWithChar ||
+				"https://" === pendingWithChar
       ) {
-        add_text(p)
-        add_token(p, Token.RAW_URL)
-        p.pending = pending_with_char
-        p.text    = pending_with_char
+        addText(p)
+        addToken(p, Token.RAW_URL)
+        p.pending = pendingWithChar
+        p.text    = pendingWithChar
       }
       else
         if ("http:/" [p.pending.length] === char ||
 				"https:/"[p.pending.length] === char
         ) {
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
         }
         else {
           p.token = p.tokens[p.len]
-          parser_write(p, char)
+          writeToParser(p, char)
         }
       continue
     case Token.LINK:
@@ -666,11 +670,11 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 				[Link](url)
 					 ^
 				*/
-        add_text(p)
+        addText(p)
         if ("(" === char) {
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
         } else {
-          end_token(p)
+          endToken(p)
           p.pending = char
         }
         continue
@@ -685,8 +689,8 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
         if (")" === char) {
           const type = p.token === Token.LINK ? Attr.HREF : Attr.SRC
           const url = p.pending.slice(2)
-          p.renderer.set_attr(p.renderer.data, type, url)
-          end_token(p)
+          p.renderer.setAttr(p.renderer.data, type, url)
+          endToken(p)
           p.pending = ""
         } else {
           p.pending += char
@@ -702,13 +706,13 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 			    "\n"=== char ||
 			    "\\"=== char
       ) {
-        p.renderer.set_attr(p.renderer.data, Attr.HREF, p.pending)
-        add_text(p)
-        end_token(p)
+        p.renderer.setAttr(p.renderer.data, Attr.HREF, p.pending)
+        addText(p)
+        endToken(p)
         p.pending = char
       } else {
         p.text   += char
-        p.pending = pending_with_char
+        p.pending = pendingWithChar
       }
       continue
     }
@@ -725,18 +729,18 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       } else {
         const char_code = char.charCodeAt(0)
         p.pending = ""
-        p.text += is_digit(char_code)                 || // 0-9
+        p.text += isDigit(char_code)                   || // 0-9
 				          (char_code >= 65 && char_code <= 90) || // A-Z
 				          (char_code >= 97 && char_code <= 122)   // a-z
-				          ? pending_with_char
+				          ? pendingWithChar
 				          : char
       }
       continue
       /* Newline */
     case "\n":
-      add_text(p)
+      addText(p)
       p.token = Token.LINE_BREAK
-      p.blockquote_idx = 0
+      p.blockquoteIndex = 0
       p.pending = char
       continue
       /* `Code Inline` */
@@ -744,12 +748,12 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       if (p.token & Token.IMAGE) break
 
       if ("`" === char) {
-        p.backticks_count += 1
-        p.pending = pending_with_char
+        p.backticksCount += 1
+        p.pending = pendingWithChar
       } else {
-        p.backticks_count += 1 // started at 0, and first wasn't counted
-        add_text(p)
-        add_token(p, Token.CODE_INLINE)
+        p.backticksCount += 1 // started at 0, and first wasn't counted
+        addText(p)
+        addToken(p, Token.CODE_INLINE)
         p.text = " " === char || "\n" === char ? "" : char // trim leading space
         p.pending = ""
       }
@@ -771,15 +775,15 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					^
 				*/
         if (symbol === char) {
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
           continue
         }
         /* *Em*
 					^
 				*/
         if (" " !== char && "\n" !== char) {
-          add_text(p)
-          add_token(p, italic)
+          addText(p)
+          addToken(p, italic)
           p.pending = char
           continue
         }
@@ -788,9 +792,9 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					 ^
 				*/
         if (symbol === char) {
-          add_text(p)
-          add_token(p, strong)
-          add_token(p, italic)
+          addText(p)
+          addToken(p, strong)
+          addToken(p, italic)
           p.pending = ""
           continue
         }
@@ -798,8 +802,8 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					 ^
 				*/
         if (" " !== char && "\n" !== char) {
-          add_text(p)
-          add_token(p, strong)
+          addText(p)
+          addToken(p, strong)
           p.pending = char
           continue
         }
@@ -815,7 +819,7 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					^
 				*/
         if ("~" === char) {
-          p.pending = pending_with_char
+          p.pending = pendingWithChar
           continue
         }
       } else {
@@ -823,8 +827,8 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
 					 ^
 				*/
         if (" " !== char && "\n" !== char) {
-          add_text(p)
-          add_token(p, Token.STRIKE)
+          addText(p)
+          addToken(p, Token.STRIKE)
           p.pending = char
           continue
         }
@@ -836,8 +840,8 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       if (!(p.token & (Token.IMAGE | Token.LINK)) &&
 			    "]" !== char
       ) {
-        add_text(p)
-        add_token(p, Token.LINK)
+        addText(p)
+        addToken(p, Token.LINK)
         p.pending = char
         continue
       }
@@ -847,8 +851,8 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
       if (!(p.token & Token.IMAGE) &&
 			    "[" === char
       ) {
-        add_text(p)
-        add_token(p, Token.IMAGE)
+        addText(p)
+        addToken(p, Token.IMAGE)
         p.pending = ""
         continue
       }
@@ -882,5 +886,5 @@ export function parser_write<T>(p: Parser<T>, chunk: string): void {
     p.pending = char
   }
 
-  add_text(p)
+  addText(p)
 }

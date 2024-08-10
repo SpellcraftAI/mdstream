@@ -1,22 +1,7 @@
-import { Token, Attr } from "./tokens"
-import { attr_to_html_attr } from "./parser"
+import { serializeAttr } from "@/parser"
+import type { Renderer, RendererAddToken } from "@/renderer/types"
+import { Token } from "@/tokens"
 
-export type Children<T = string> = Array<T>
-export type NodeAttrs = {[key in Attr]?: string};
-
-// Renderer types
-export type RendererAddToken<T> = (data: T, type: Token) => void;
-export type RendererEndToken<T> = (data: T) => void;
-export type RendererAddText<T> = (data: T, text: string) => void;
-export type RendererSetAttr<T> = (data: T, type: Attr, value: string) => void;
-
-export interface Renderer<T> {
-    data: T;
-    add_token: RendererAddToken<T>;
-    end_token: RendererEndToken<T>;
-    add_text: RendererAddText<T>;
-    set_attr: RendererSetAttr<T>;
-}
 
 // Default Renderer types
 export interface DefaultRendererData {
@@ -25,25 +10,27 @@ export interface DefaultRendererData {
 }
 
 export type DefaultRenderer = Renderer<DefaultRendererData>;
-export type DefaultAddToken = RendererAddToken<DefaultRendererData>;
-export type DefaultEndToken = RendererEndToken<DefaultRendererData>;
-export type DefaultAddText = RendererAddText<DefaultRendererData>;
-export type DefaultSetAttr = RendererSetAttr<DefaultRendererData>;
 
-export function default_renderer(root: HTMLElement): DefaultRenderer {
+export function createDefaultRenderer(root: HTMLElement): DefaultRenderer {
   return {
-    add_token: default_add_token,
-    end_token: default_end_token,
-    add_text:  default_add_text,
-    set_attr:  default_set_attr,
-    data    : {
+    addToken: defaultAddToken,
+    endToken: (data) => {
+      data.index -= 1
+    },
+    addText: (data, text) => {
+      data.nodes[data.index]?.appendChild(document.createTextNode(text))
+    },
+    setAttr: (data, type, value) => {
+      data.nodes[data.index]?.setAttribute(serializeAttr(type), value)
+    },
+    data: {
       nodes: ([root,,,,,]),
       index: 0,
     },
   }
 }
 
-export const default_add_token: DefaultAddToken = (data, type) => {
+const defaultAddToken: RendererAddToken<DefaultRendererData> = (data, type) => {
   let mount: HTMLElement
   let slot: HTMLElement
 
@@ -130,16 +117,4 @@ export const default_add_token: DefaultAddToken = (data, type) => {
   data.nodes[data.index]?.appendChild(mount)
   data.index += 1
   data.nodes[data.index] = slot
-}
-
-export const default_end_token: DefaultEndToken = (data) => {
-  data.index -= 1
-}
-
-export const default_add_text: DefaultAddText = (data, text) => {
-  data.nodes[data.index]?.appendChild(document.createTextNode(text))
-}
-
-export const default_set_attr: DefaultSetAttr = (data, type, value) => {
-  data.nodes[data.index]?.setAttribute(attr_to_html_attr(type), value)
 }

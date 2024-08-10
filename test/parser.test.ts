@@ -3,7 +3,7 @@ import * as t from "bun:test"
 import type { Children } from "@/types"
 import { Token, Attr } from "@/tokens"
 import { labelToken } from "@/logger"
-import { createParser, parser_end, parser_write } from "@/parser"
+import { createParser, endParser, writeToParser } from "@/parser"
 
 import type { TestRendererNode  } from "./types"
 import { expectChildren, createTestRenderer } from "./utils"
@@ -13,15 +13,15 @@ const br: TestRendererNode = {
   children: []
 }
 
-function testSingleWrite<T extends string | TestRendererNode>(title: string, markdown: string, expected_children: Children<T>) {
+function testSingleWrite<T extends string | TestRendererNode>(title: string, markdown: string, expectedChildren: Children<T>) {
   t.test(title + ";", () => {
     const renderer = createTestRenderer()
     const parser = createParser(renderer)
   
-    parser_write(parser, markdown)
-    parser_end(parser)
+    writeToParser(parser, markdown)
+    endParser(parser)
   
-    expectChildren(renderer.data.root.children, expected_children)
+    expectChildren(renderer.data.root.children, expectedChildren)
   })
   
   t.test(title + "; by_char;", () => {
@@ -29,30 +29,30 @@ function testSingleWrite<T extends string | TestRendererNode>(title: string, mar
     const parser = createParser(renderer)
   
     for (const char of markdown) {
-      parser_write(parser, char)
+      writeToParser(parser, char)
     }
-    parser_end(parser)
-  
-    expectChildren(renderer.data.root.children, expected_children)
+
+    endParser(parser)
+    expectChildren(renderer.data.root.children, expectedChildren)
   })
 }
 
 for (let level = 1; level <= 6; level += 1) {
-  let heading_type: Token
+  let headingType: Token
   switch (level) {
-  case 1: heading_type = Token.HEADING_1; break
-  case 2: heading_type = Token.HEADING_2; break
-  case 3: heading_type = Token.HEADING_3; break
-  case 4: heading_type = Token.HEADING_4; break
-  case 5: heading_type = Token.HEADING_5; break
-  case 6: heading_type = Token.HEADING_6; break
+  case 1: headingType = Token.HEADING_1; break
+  case 2: headingType = Token.HEADING_2; break
+  case 3: headingType = Token.HEADING_3; break
+  case 4: headingType = Token.HEADING_4; break
+  case 5: headingType = Token.HEADING_5; break
+  case 6: headingType = Token.HEADING_6; break
   default: throw new Error("Invalid heading level")
   }
 
   testSingleWrite(`Heading_${level}`,
     "#".repeat(level) + " " + "foo",
     [{
-      type    : heading_type,
+      type    : headingType,
       children: ["foo"]
     }]
   )
@@ -60,7 +60,7 @@ for (let level = 1; level <= 6; level += 1) {
   testSingleWrite(`Heading_${level} with Line Italic`,
     "#".repeat(level) + " foo *bar*",
     [{
-      type    : heading_type,
+      type    : headingType,
       children: ["foo ", {
         type    : Token.ITALIC_AST,
         children: ["bar"]
@@ -71,7 +71,7 @@ for (let level = 1; level <= 6; level += 1) {
   testSingleWrite(`Heading_${level} after line break`,
     "\n" + "#".repeat(level) + " " + "foo",
     [{
-      type    : heading_type,
+      type    : headingType,
       children: ["foo"]
     }]
   )
@@ -354,13 +354,13 @@ for (const {c, italic, strong} of [{
   italic: Token.ITALIC_UND,
   strong: Token.STRONG_UND,
 }]) {
-  const case_1 = ""+c+c+"bold"+c+"bold>em"+c+c+c+""
-  const case_2 = ""+c+c+c+"bold>em"+c+"bold"+c+c+""
-  const case_3 = ""+c+"em"+c+c+"em>bold"+c+c+c+""
-  const case_4 = ""+c+c+c+"bold>em"+c+c+"em"+c+""
+  const case1 = ""+c+c+"bold"+c+"bold>em"+c+c+c+""
+  const case2 = ""+c+c+c+"bold>em"+c+"bold"+c+c+""
+  const case3 = ""+c+"em"+c+c+"em>bold"+c+c+c+""
+  const case4 = ""+c+c+c+"bold>em"+c+c+"em"+c+""
 
-  testSingleWrite("Italic & Bold \""+case_1+"\'",
-    case_1,
+  testSingleWrite("Italic & Bold \""+case1+"\'",
+    case1,
     [{
       type    : Token.PARAGRAPH,
       children: [{
@@ -373,8 +373,8 @@ for (const {c, italic, strong} of [{
     }]
   )
 
-  testSingleWrite("Italic & Bold \""+case_2+"\'",
-    case_2,
+  testSingleWrite("Italic & Bold \""+case2+"\'",
+    case2,
     [{
       type    : Token.PARAGRAPH,
       children: [{
@@ -388,8 +388,8 @@ for (const {c, italic, strong} of [{
     }]
   )
 
-  testSingleWrite("Italic & Bold \""+case_3+"\'",
-    case_3,
+  testSingleWrite("Italic & Bold \""+case3+"\'",
+    case3,
     [{
       type    : Token.PARAGRAPH,
       children: [{
@@ -402,8 +402,8 @@ for (const {c, italic, strong} of [{
     }]
   )
 
-  testSingleWrite("Italic & Bold \""+case_4+"\'",
-    case_4,
+  testSingleWrite("Italic & Bold \""+case4+"\'",
+    case4,
     [{
       type    : Token.PARAGRAPH,
       children: [{
@@ -901,19 +901,21 @@ const optimisticTests = [
 ] as const
 
 for (const [c, token] of optimisticTests) {
-  const list_name = token === Token.LIST_UNORDERED
-    ? "List Unordered"
-    : "List Ordered"
-  const suffix = "; prefix: "+c
+  const listName = 
+    token === Token.LIST_UNORDERED
+      ? "List Unordered"
+      : "List Ordered"
+
+  const suffix = "; prefix: " + c
 
   const attrs = c === "420."
     ? {[Attr.START]: "420"}
     : undefined
 
   const indent       = " ".repeat(c.length + 1)
-  const indent_small = " ".repeat(c.length)
+  const indentSmall = " ".repeat(c.length)
 
-  testSingleWrite(list_name + suffix,
+  testSingleWrite(listName + suffix,
     c+" foo",
     [{
       type    : token,
@@ -925,7 +927,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " with italic" + suffix,
+  testSingleWrite(listName + " with italic" + suffix,
     c+" *foo*",
     [{
       type    : token,
@@ -940,7 +942,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " two items" + suffix,
+  testSingleWrite(listName + " two items" + suffix,
     c+" a\n"+
 		c+" b",
     [{
@@ -956,7 +958,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " with line break" + suffix,
+  testSingleWrite(listName + " with line break" + suffix,
     c+" a\nb",
     [{
       type    : token,
@@ -968,7 +970,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " end" + suffix,
+  testSingleWrite(listName + " end" + suffix,
     c+" a\n"+
 		"\n"+
 		"b",
@@ -985,7 +987,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " after line break" + suffix,
+  testSingleWrite(listName + " after line break" + suffix,
     "a\n"+
 		c+" b",
     [{
@@ -1001,7 +1003,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " with unchecked task" + suffix,
+  testSingleWrite(listName + " with unchecked task" + suffix,
     c+" [ ] foo",
     [{
       type    : token,
@@ -1016,7 +1018,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " with checked task" + suffix,
+  testSingleWrite(listName + " with checked task" + suffix,
     c+" [x] foo",
     [{
       type    : token,
@@ -1032,7 +1034,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " with two tasks" + suffix,
+  testSingleWrite(listName + " with two tasks" + suffix,
     c+" [ ] foo\n"+
 		c+" [x] bar\n",
     [{
@@ -1055,7 +1057,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " with link" + suffix,
+  testSingleWrite(listName + " with link" + suffix,
     c+" [x](url)",
     [{
       type    : token,
@@ -1071,7 +1073,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " nested list" + suffix,
+  testSingleWrite(listName + " nested list" + suffix,
     c+" a\n"+
 		indent+c+" b",
     [{
@@ -1091,9 +1093,9 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " failed nested list" + suffix,
+  testSingleWrite(listName + " failed nested list" + suffix,
     c+" a\n"+
-		indent_small+c+" b",
+		indentSmall+c+" b",
     [{
       type    : token,
       attrs   : attrs,
@@ -1107,7 +1109,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " nested ul multiple items" + suffix,
+  testSingleWrite(listName + " nested ul multiple items" + suffix,
     c+" a\n"+
 		indent+"* b\n"+
 		indent+"* c\n",
@@ -1130,7 +1132,7 @@ for (const [c, token] of optimisticTests) {
     }]
   )
 
-  testSingleWrite(list_name + " nested and un-nested" + suffix,
+  testSingleWrite(listName + " nested and un-nested" + suffix,
     c+" a\n"+
 		indent+"* b\n"+
 		c+" c\n",
