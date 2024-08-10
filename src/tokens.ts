@@ -51,14 +51,14 @@ export type ANY_LIST = Token.LIST_UNORDERED | Token.LIST_ORDERED;
 export type ANY_ROOT = Token.DOCUMENT | Token.BLOCKQUOTE;
 
 // Explicit constants
-export const ANY_HEADING: ANY_HEADING = Token.HEADING_1 | Token.HEADING_2 | Token.HEADING_3 | Token.HEADING_4 | Token.HEADING_5 | Token.HEADING_6;
-export const ANY_CODE: ANY_CODE = Token.CODE_BLOCK | Token.CODE_FENCE | Token.CODE_INLINE;
-export const ANY_ITALIC: ANY_ITALIC = Token.ITALIC_AST | Token.ITALIC_UND;
-export const ANY_STRONG: ANY_STRONG = Token.STRONG_AST | Token.STRONG_UND;
-export const ANY_AST: ANY_AST = Token.STRONG_AST | Token.ITALIC_AST;
-export const ANY_UND: ANY_UND = Token.STRONG_UND | Token.ITALIC_UND;
-export const ANY_LIST: ANY_LIST = Token.LIST_UNORDERED | Token.LIST_ORDERED;
-export const ANY_ROOT: ANY_ROOT = Token.DOCUMENT | Token.BLOCKQUOTE;
+export const ANY_HEADING: ANY_HEADING = Token.HEADING_1 | Token.HEADING_2 | Token.HEADING_3 | Token.HEADING_4 | Token.HEADING_5 | Token.HEADING_6
+export const ANY_CODE: ANY_CODE = Token.CODE_BLOCK | Token.CODE_FENCE | Token.CODE_INLINE
+export const ANY_ITALIC: ANY_ITALIC = Token.ITALIC_AST | Token.ITALIC_UND
+export const ANY_STRONG: ANY_STRONG = Token.STRONG_AST | Token.STRONG_UND
+export const ANY_AST: ANY_AST = Token.STRONG_AST | Token.ITALIC_AST
+export const ANY_UND: ANY_UND = Token.STRONG_UND | Token.ITALIC_UND
+export const ANY_LIST: ANY_LIST = Token.LIST_UNORDERED | Token.LIST_ORDERED
+export const ANY_ROOT: ANY_ROOT = Token.DOCUMENT | Token.BLOCKQUOTE
 
 export const TokenLabel: Readonly<Record<Token, string>> = {
   [Token.DOCUMENT]: "Document",
@@ -89,7 +89,7 @@ export const TokenLabel: Readonly<Record<Token, string>> = {
   [Token.CHECKBOX]: "Checkbox",
   [Token.MAYBE_URL]: "MaybeUrl",
   [Token.MAYBE_TASK]: "MaybeTask"
-} as const;
+} as const
 
 
 export const AttrLabel: Readonly<Record<Attr, string>> = {
@@ -98,4 +98,4 @@ export const AttrLabel: Readonly<Record<Attr, string>> = {
   [Attr.LANG]: "lang",
   [Attr.CHECKED]: "checked",
   [Attr.START]: "start"
-} as const;
+} as const

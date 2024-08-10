@@ -7,5 +7,5 @@ export function token_to_string(type: Token): typeof TokenLabel[Token] {
 }
 
 export function attr_to_html_attr(type: Attr): typeof AttrLabel[Attr] {
-	return AttrLabel[type]
+  return AttrLabel[type]
 }
