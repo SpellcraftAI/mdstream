@@ -1,4 +1,4 @@
-import type { Renderer, RendererAddText, RendererAddToken, RendererEndToken, RendererSetAttr } from "@/renderer"
+import type { Renderer } from "@/renderer"
 import type { Token } from "@/tokens"
 import type { Children, NodeAttrs } from "@/types"
 
@@ -17,7 +17,3 @@ export interface TestRendererNode {
 }
 
 export type TestRenderer = Renderer<TestRendererData>;
-export type TestAddToken = RendererAddToken<TestRendererData>;
-export type TestEndToken = RendererEndToken<TestRendererData>;
-export type TestAddText = RendererAddText<TestRendererData>;
-export type TestSetAttr = RendererSetAttr<TestRendererData>;
