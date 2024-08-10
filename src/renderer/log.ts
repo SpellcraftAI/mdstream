@@ -1,6 +1,7 @@
 import type { Renderer } from "@/types"
 import { Token } from "@/tokens"
 import { serializeAttr } from "./utils"
+import chalk from "chalk"
 
 export function labelToken(type: Token): typeof TOKEN_LABEL[Token] {
   return TOKEN_LABEL[type]
@@ -9,16 +10,16 @@ export function labelToken(type: Token): typeof TOKEN_LABEL[Token] {
 export const createLogRenderer = (): Renderer<undefined> => ({
   data: undefined,
   addToken: (_, type) => {
-    console.log("addToken:", labelToken(type))
+    console.log(chalk.dim("addToken"), chalk.bold(labelToken(type)))
   },
   endToken: (_) => {
-    console.log("endToken")
+    console.log(chalk.dim("endToken"))
   },
   addText:  (_, text) => {
-    console.log("addText: \"%s\"", text)
+    console.log(chalk.dim("addText"), chalk.bgWhiteBright(text))
   },
   setAttr:  (_, type, value) => {
-    console.log("setAttr: %s=\"%s\"", serializeAttr(type), value)
+    console.log(chalk.dim("setAttr: %s=\"%s\""), serializeAttr(type), value)
   },
 })
 

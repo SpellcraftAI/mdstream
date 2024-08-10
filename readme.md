@@ -2,7 +2,7 @@
 
 [![version](https://img.shields.io/npm/v/streaming-markdown?logo=npm)](https://www.npmjs.com/package/streaming-markdown) [![github](https://img.shields.io/badge/GitHub-streaming--markdown-orange?logo=github)](https://github.com/thetarnav/streaming-markdown)
 
-**Experiment making a streaming makdown parser *à la ChatGPT.***
+**Experiment making a streaming markdown parser *à la ChatGPT.***
 
 ---
 
