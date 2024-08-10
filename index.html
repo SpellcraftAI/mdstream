@@ -27,7 +27,7 @@
   const source = await response.text()
 
   const container = /** @type {HTMLElement} */(document.getElementById("markdown"))
-  const renderer = smd.createDefaultRenderer(container)
+  const renderer = smd.createHTMLRenderer(container)
   // const renderer = mds.logger_renderer
   const parser = smd.createParser(renderer)
 

@@ -3,7 +3,7 @@ import { expect } from "bun:test"
 
 import { Token } from "@/tokens"
 import type { Children } from "@/renderer/types"
-import { labelToken } from "@/logger"
+import { labelToken } from "@/renderer/logging"
 
 export function createTestRenderer(): TestRenderer {
   const root: TestRendererNode = {

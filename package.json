@@ -17,7 +17,7 @@
   ],
   "browser": "./smd.min.js",
   "module": "./smd.js",
-  "types": "./smd.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     "import": {
       "types": "./smd.d.ts",

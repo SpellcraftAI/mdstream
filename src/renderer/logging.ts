@@ -1,20 +1,12 @@
-import type { Renderer, RendererAddText, RendererAddToken, RendererEndToken, RendererSetAttr } from "./renderer/types"
-import { Token } from "./tokens"
-import { serializeAttr } from "./parser"
+import type { Renderer } from "@/types"
+import { Token } from "@/tokens"
+import { serializeAttr } from "./utils"
 
-export type LoggerRendererData = undefined;
-
-export type LoggerRenderer = Renderer<LoggerRendererData>;
-export type LoggerRendererAddToken = RendererAddToken<LoggerRendererData>;
-export type LoggerRendererEndToken = RendererEndToken<LoggerRendererData>;
-export type LoggerRendererAddText = RendererAddText<LoggerRendererData>;
-export type LoggerRendererSetAttr = RendererSetAttr<LoggerRendererData>;
-
-export function labelToken(type: Token): typeof TokenLabel[Token] {
-  return TokenLabel[type]
+export function labelToken(type: Token): typeof TOKEN_LABEL[Token] {
+  return TOKEN_LABEL[type]
 }
 
-export const createLoggerRenderer: LoggerRenderer = {
+export const LogRenderer: Renderer<undefined> = {
   data: undefined,
   addToken: (_, type) => {
     console.log("addToken:", labelToken(type))
@@ -30,7 +22,7 @@ export const createLoggerRenderer: LoggerRenderer = {
   },
 }
 
-export const TokenLabel: Readonly<Record<Token, string>> = {
+const TOKEN_LABEL: Readonly<Record<Token, string>> = {
   [Token.DOCUMENT]: "Document",
   [Token.PARAGRAPH]: "Paragraph",
   [Token.HEADING_1]: "Heading1",

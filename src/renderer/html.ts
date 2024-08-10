@@ -1,19 +1,17 @@
-import { serializeAttr } from "@/parser"
-import type { Renderer, RendererAddToken } from "@/renderer/types"
 import { Token } from "@/tokens"
+import type { Renderer, RendererAddToken } from "./types"
+import { serializeAttr } from "./utils"
 
-
-// Default Renderer types
-export interface DefaultRendererData {
+export interface HTMLRendererData {
   nodes: Array<HTMLElement | undefined>;
   index: number;
 }
 
-export type DefaultRenderer = Renderer<DefaultRendererData>;
+export type HTMLRenderer = Renderer<HTMLRendererData>;
 
-export function createDefaultRenderer(root: HTMLElement): DefaultRenderer {
+export function createHTMLRenderer(root: HTMLElement): HTMLRenderer {
   return {
-    addToken: defaultAddToken,
+    addToken: addTokenHTML,
     endToken: (data) => {
       data.index -= 1
     },
@@ -30,7 +28,7 @@ export function createDefaultRenderer(root: HTMLElement): DefaultRenderer {
   }
 }
 
-const defaultAddToken: RendererAddToken<DefaultRendererData> = (data, type) => {
+const addTokenHTML: RendererAddToken<HTMLRendererData> = (data, type) => {
   let mount: HTMLElement
   let slot: HTMLElement
 

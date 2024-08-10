@@ -59,12 +59,3 @@ export const ANY_AST: ANY_AST = Token.STRONG_AST | Token.ITALIC_AST
 export const ANY_UND: ANY_UND = Token.STRONG_UND | Token.ITALIC_UND
 export const ANY_LIST: ANY_LIST = Token.LIST_UNORDERED | Token.LIST_ORDERED
 export const ANY_ROOT: ANY_ROOT = Token.DOCUMENT | Token.BLOCKQUOTE
-
-
-export const AttrLabel: Readonly<Record<Attr, string>> = {
-  [Attr.HREF]: "href",
-  [Attr.SRC]: "src",
-  [Attr.LANG]: "lang",
-  [Attr.CHECKED]: "checked",
-  [Attr.START]: "start"
-} as const

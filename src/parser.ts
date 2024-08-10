@@ -1,5 +1,5 @@
 import type { Renderer } from "./renderer/types"
-import { Token, Attr, AttrLabel } from "./tokens"
+import { Token, Attr } from "./tokens"
 
 const TOKEN_ARRAY_CAP = 24
 
@@ -39,10 +39,6 @@ export function createParser<T>(renderer: Renderer<T>): Parser<T> {
     indent    : "",
     indentLength: 0,
   }
-}
-
-export function serializeAttr(type: Attr): typeof AttrLabel[Attr] {
-  return AttrLabel[type]
 }
 
 /**
