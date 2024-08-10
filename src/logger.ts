@@ -1,5 +1,5 @@
 import type { Renderer, RendererAddText, RendererAddToken, RendererEndToken, RendererSetAttr } from "./renderer"
-import { attr_to_html_attr, token_to_string } from "./utils"
+import { attr_to_html_attr, token_to_string } from "./parser"
 
 export type LoggerRendererData = undefined;
 

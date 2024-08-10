@@ -1,5 +1,5 @@
 import { Token, Attr } from "./tokens"
-import { attr_to_html_attr } from "./utils"
+import { attr_to_html_attr } from "./parser"
 
 export type Children<T = string> = Array<T>
 export type NodeAttrs = {[key in Attr]?: string};

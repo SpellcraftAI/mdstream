@@ -2,8 +2,7 @@ import * as t from "bun:test"
 
 import type { Children } from "@/types"
 import { Token, Attr } from "@/tokens"
-import { token_to_string } from "@/utils"
-import { createParser, parser_end, parser_write } from "@/parser"
+import { createParser, parser_end, parser_write, token_to_string } from "@/parser"
 
 import type { TestRendererNode  } from "./types"
 import { assert_children, test_renderer } from "./utils"

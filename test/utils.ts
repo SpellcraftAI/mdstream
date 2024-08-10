@@ -1,7 +1,8 @@
-import { expect } from "bun:test"
-import { Token } from "@/tokens"
 import type { TestAddText, TestAddToken, TestEndToken, TestRenderer, TestRendererNode, TestSetAttr } from "./types"
-import { token_to_string } from "@/utils"
+import { expect } from "bun:test"
+
+import { Token } from "@/tokens"
+import { token_to_string } from "@/parser"
 import type { Children } from "@/renderer"
 
 export function test_renderer(): TestRenderer {
