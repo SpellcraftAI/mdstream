@@ -4,27 +4,22 @@ import type { ChalkInstance } from "chalk"
 import chalk from "chalk"
 
 export interface ANSIRendererData {
-  nodes: Array<string>;
-  index: number;
+  buffer: string;
+  prefix: string;
   styles: ChalkInstance[];
 }
 
 export function createANSIRenderer(): Renderer<ANSIRendererData> {
-  let firstTextChunk = true
-  let initialContent = ""
 
   return {
     addToken: (data, type) => {
-      // console.log({ type: labelToken(type), data })
-      data.index += 1
-      initialContent = ""
-      firstTextChunk = true
+      data.prefix = ""
       
       switch (type) {
       case Token.DOCUMENT:
         break
       case Token.PARAGRAPH:
-        initialContent = "\n\n"
+        data.prefix = "\n\n"
         break
       case Token.HEADING_1:
       case Token.HEADING_2:
@@ -33,27 +28,25 @@ export function createANSIRenderer(): Renderer<ANSIRendererData> {
       case Token.HEADING_5:
       case Token.HEADING_6:
         data.styles.push(chalk.bold)
-        initialContent = "\n"
-        // data.nodes[data.index] += "\n"
+        data.prefix = "\n\n"
         break
       case Token.BLOCKQUOTE:
         data.styles.push(chalk.dim)
-        // data.nodes[data.index] += "\n  "
         break
       case Token.CODE_INLINE:
         data.styles.push(chalk.bgGray.white)
         break
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:
+        data.prefix = "\n\n"
         data.styles.push(chalk.bgGray.white)
-        // needsStartPadding = true
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
-        initialContent = "\n\n"
+        data.prefix = "\n"
         break
       case Token.LIST_ITEM:
-        initialContent = "  • "
+        data.prefix = "\n • "
         break
       case Token.STRONG_AST:
       case Token.STRONG_UND:
@@ -71,54 +64,42 @@ export function createANSIRenderer(): Renderer<ANSIRendererData> {
         data.styles.push(chalk.blue.underline)
         break
       case Token.IMAGE:
-        initialContent = chalk.magenta("[Image]")
+        data.prefix = chalk.magenta("[Image] ")
         break
       case Token.RULE:
-        initialContent = "\n" + chalk.dim("─".repeat(40)) + "\n"
+        data.prefix = chalk.dim("\n\n" + "─".repeat(40))
         break
       case Token.LINE_BREAK:
-        initialContent = "\n"
-        // needsStartPadding = true
+        data.prefix = "\n\n"
         break
       case Token.CHECKBOX:
-        initialContent += "[ ] "
+        data.prefix = " [ ] "
         break
       }
-
-      data.nodes[data.index] = initialContent
+      
+      data.buffer += data.prefix
+      process.stdout.write(data.prefix)
     },
     endToken: (data) => {
       data.styles = []
     },
     addText: (data, text) => {
-      if (firstTextChunk) {
-        text = data.nodes[data.index] + text
-        console.log({ text, firstTextChunk})
-        firstTextChunk = false
-      }
-
-      let styledText = text
-      
       for (const style of data.styles) {
-        styledText = style(styledText)
+        text = style(text)
       }
 
-      data.nodes[data.index] += styledText
-      process.stdout.write(styledText)
+      data.buffer += text
+      process.stdout.write(text)
     },
     setAttr: (data, type, value) => {
       if (type === Attr.HREF || type === Attr.SRC) {
-        data.nodes[data.index] += chalk.blue(` (${value})`)
+        data.buffer += chalk.blue(` (${value})`)
       }
     },
     data: {
-      nodes: [""],
-      index: 0,
-      styles: []
+      buffer: "",
+      prefix: "",
+      styles: [],
     },
   }
-}
-
-export function renderANSI(renderer: Renderer<ANSIRendererData>): string {
-  return renderer.data.nodes.join("").trim()
 }

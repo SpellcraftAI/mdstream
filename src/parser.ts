@@ -60,8 +60,8 @@ function addText<T>(p: Parser<T>) {
 function endToken<T>(p: Parser<T>) {
   console.assert(p.len > 0, "No nodes to end")
   p.len -= 1
-  p.token = /** @type {Token} */ (p.tokens[p.len])
-  p.renderer.endToken(p.renderer.data)
+  p.token = (p.tokens[p.len])
+  p.renderer.endToken(p.renderer.data, p.token)
 }
 
 function addToken<T>(p: Parser<T>, token: Token) {
@@ -278,7 +278,7 @@ export function writeToParser<T>(p: Parser<T>, chunk: string): void {
           case "\n":
             if (p.hrChars < 3) break
             p.renderer.addToken(p.renderer.data, Token.RULE)
-            p.renderer.endToken(p.renderer.data)
+            p.renderer.endToken(p.renderer.data, Token.RULE)
             p.pending = ""
             p.hrChars = 0
             continue
@@ -398,7 +398,7 @@ export function writeToParser<T>(p: Parser<T>, chunk: string): void {
         /* Add a line break and continue in previous token */
         p.token = p.tokens[p.len]
         p.renderer.addToken(p.renderer.data, Token.LINE_BREAK)
-        p.renderer.endToken(p.renderer.data)
+        p.renderer.endToken(p.renderer.data, Token.RULE)
       }
       /* Code Block */
       else if (p.indentLength >= 4) {
@@ -537,7 +537,7 @@ export function writeToParser<T>(p: Parser<T>, chunk: string): void {
         if ("x" === p.pending[1]) {
           p.renderer.setAttr(p.renderer.data, Attr.CHECKED, "")
         }
-        p.renderer.endToken(p.renderer.data)
+        p.renderer.endToken(p.renderer.data, Token.CHECKBOX)
         p.pending = " "
         continue
       }

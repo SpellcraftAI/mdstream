@@ -1,0 +1,54 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Streaming Markdown Parser should correctly parse and render markdown 1`] = `
+"
+
+[1mStreaming [22m[3m[1mMa[22m[23m[3m[1mrkdown[22m[23m
+
+[35m[Image] [39m[34m[4mvers[24m[39m[34m[4mion[24m[39m[34m (https://img.shields.io/npm/v/streaming-markdown?logo=npm)[39m[34m (https://www.npmjs.com/package/streaming-markdown)[39m [35m[Image] [39m[34m[4mgithub[24m[39m[34m (https://img.shields.io/badge/GitHub-streaming--markdown-orange?logo=github)[39m[34m (https://github.com/thetarnav/streaming-markdown)[39m
+
+[1mEx[22m[1mperiment making [22m[1ma streaming mark[22m[1mdown parser [22m[3m[1mà l[22m[23m[3m[1ma ChatGPT.[22m[23m[2m[22m
+[2m[22m
+[2m────────────────────────────────────────[22m
+
+[1mInstallat[22m[1mion[22m
+
+Install [100m[37mstr[39m[49m[100m[37meaming-markdown[39m[49m package from npm.
+
+[100m[37mnpm [39m[49m[100m[37minstall streamin[39m[49m[100m[37mg-markdown[39m[49m
+
+[3mOr just copy [23m[100m[37m[1m[34m[4m[3msmd.js[23m[24m[39m[37m[22m[39m[49m[34m (https://github.com/thetarnav/streaming-markdown/blob/main/smd.js)[39m file to your project.
+
+Or use the [34m[4mCDN link[24m[39m[34m (https://www.jsdelivr.com/package/npm/streaming-markdown)[39m.
+
+It's a minified [3m(3kB G[23m[3mzip)[23m version of the package, with only the necessary functions exported.
+
+See the exports in [100m[37m[34m[4ms[24m[39m[37m[39m[49m[100m[37m[34m[4mmd_min_entry.js[24m[39m[37m[39m[49m[34m (https://github.com/thetarnav/streaming-markdown/blob/main/smd_min_entry.js)[39m.
+
+The package uses ES module exports, so you need to use [100m[37mtype="mo[39m[49m[100m[37mdule"[39m[49m in your script tag.
+
+[100m[37m<script type[39m[49m[100m[37m="module">[39m[49m
+[100m[37m    i[39m[49m[100m[37mmport * as smd f[39m[49m[100m[37mrom "https://cdn[39m[49m[100m[37m.jsdelivr.net/np[39m[49m[100m[37mm/streaming-mark[39m[49m[100m[37mdown/smd.min.js"[39m[49m[100m[37m[39m[49m
+[100m[37m    // ...[39m[49m
+[100m[37m</sc[39m[49m[100m[37mript>[39m[49m
+
+[1mU[22m[1msage[22m
+
+First create new markdown [100m[37mParser[39m[49m by calling [100m[37mparser[39m[49m function.
+
+It's single argument is a [100m[37mRenderer[39m[49m object, which is an interface to render the parsed markdown tokens to the DOM.
+
+There are two built-in renderers—[100m[37mde[39m[49m[100m[37mfault_renderer[39m[49m and [100m[37mlogger_rend[39m[49m[100m[37merer[39m[49m—that you can try at first.
+
+[100m[37mimport *[39m[49m[100m[37m as smd from "st[39m[49m[100m[37mreaming-markdown[39m[49m[100m[37m"[39m[49m
+[100m[37m[39m[49m
+[100m[37mconst element[39m[49m[100m[37m  = document.get[39m[49m[100m[37mElementById("mar[39m[49m[100m[37mkdown")[39m[49m
+[100m[37mconst re[39m[49m[100m[37mnderer = smd.def[39m[49m[100m[37mault_renderer(el[39m[49m[100m[37mement)[39m[49m
+[100m[37mconst par[39m[49m[100m[37mser   = smd.pars[39m[49m[100m[37mer(renderer)[39m[49m
+
+[100m[37m[1mwrite[22m[39m[49m function
+
+Then, you can start streaming markdown to the [100m[37mParser[39m[49m by calling [100m[37mparse[39m[49m[100m[37mr_write[39m[49m function with the chunk of markdown string.
+
+[100m[37msmd.[39m[49m[100m[37mparser_write(par[39m[49m[100m[37mser, "# Streamin[39m[49m[100m[37mg Markdo[39m[49m"
+`;

@@ -1,0 +1,927 @@
+bun test v1.1.22-canary.96 (df33f2b2)
+
+test/parser.test.ts:
+(pass) Heading_1; [2.66ms]
+(pass) Heading_1; by_char; [0.09ms]
+(pass) Heading_1 with Line Italic; [0.25ms]
+(pass) Heading_1 with Line Italic; by_char; [0.08ms]
+(pass) Heading_1 after line break; [0.04ms]
+(pass) Heading_1 after line break; by_char; [0.05ms]
+(pass) Heading_2;
+(pass) Heading_2; by_char; [0.11ms]
+(pass) Heading_2 with Line Italic; [0.05ms]
+(pass) Heading_2 with Line Italic; by_char; [0.10ms]
+(pass) Heading_2 after line break; [0.03ms]
+(pass) Heading_2 after line break; by_char; [0.08ms]
+(pass) Heading_3; [0.05ms]
+(pass) Heading_3; by_char; [0.05ms]
+(pass) Heading_3 with Line Italic; [0.02ms]
+(pass) Heading_3 with Line Italic; by_char; [0.09ms]
+(pass) Heading_3 after line break; [0.11ms]
+(pass) Heading_3 after line break; by_char;
+(pass) Heading_4;
+(pass) Heading_4; by_char;
+(pass) Heading_4 with Line Italic; [0.21ms]
+(pass) Heading_4 with Line Italic; by_char;
+(pass) Heading_4 after line break;
+(pass) Heading_4 after line break; by_char;
+(pass) Heading_5; [0.11ms]
+(pass) Heading_5; by_char; [0.03ms]
+(pass) Heading_5 with Line Italic; [0.03ms]
+(pass) Heading_5 with Line Italic; by_char; [0.02ms]
+(pass) Heading_5 after line break;
+(pass) Heading_5 after line break; by_char;
+(pass) Heading_6;
+(pass) Heading_6; by_char;
+(pass) Heading_6 with Line Italic;
+(pass) Heading_6 with Line Italic; by_char; [0.11ms]
+(pass) Heading_6 after line break;
+(pass) Heading_6 after line break; by_char; [0.05ms]
+(pass) Line Breaks; [0.03ms]
+(pass) Line Breaks; by_char;
+(pass) Line Breaks with Italic; [0.05ms]
+(pass) Line Breaks with Italic; by_char; [0.02ms]
+(pass) Escaped Line Breaks;
+(pass) Escaped Line Breaks; by_char;
+(pass) Paragraphs; [0.05ms]
+(pass) Paragraphs; by_char;
+(pass) Paragraph trim leading spaces; [0.03ms]
+(pass) Paragraph trim leading spaces; by_char;
+(pass) Trim too many spaces;
+(pass) Trim too many spaces; by_char;
+(pass) Trim too many spaces in italic; [0.08ms]
+(pass) Trim too many spaces in italic; by_char;
+(pass) Horizontal Rule " ** *"; [0.03ms]
+(pass) Horizontal Rule " ** *"; by_char; [0.01ms]
+(pass) Horizontal Rule " ** **";
+(pass) Horizontal Rule " ** **"; by_char;
+(pass) Horizontal Rule " ** ** *";
+(pass) Horizontal Rule " ** ** *"; by_char;
+(pass) Horizontal Rule " ** ** **"; [0.06ms]
+(pass) Horizontal Rule " ** ** **"; by_char; [0.01ms]
+(pass) Horizontal Rule " -- -";
+(pass) Horizontal Rule " -- -"; by_char;
+(pass) Horizontal Rule " -- --";
+(pass) Horizontal Rule " -- --"; by_char;
+(pass) Horizontal Rule " -- -- -"; [0.01ms]
+(pass) Horizontal Rule " -- -- -"; by_char; [0.02ms]
+(pass) Horizontal Rule " -- -- --";
+(pass) Horizontal Rule " -- -- --"; by_char;
+(pass) Horizontal Rule " __ _";
+(pass) Horizontal Rule " __ _"; by_char;
+(pass) Horizontal Rule " __ __";
+(pass) Horizontal Rule " __ __"; by_char; [0.03ms]
+(pass) Horizontal Rule " __ __ _";
+(pass) Horizontal Rule " __ __ _"; by_char;
+(pass) Horizontal Rule " __ __ __";
+(pass) Horizontal Rule " __ __ __"; by_char;
+(pass) Text after Horizontal Rule; [0.03ms]
+(pass) Text after Horizontal Rule; by_char; [0.02ms]
+(pass) Code Inline - 1 backticks; [0.03ms]
+(pass) Code Inline - 1 backticks; by_char;
+(pass) Code Inline trims spaces - 1 backticks;
+(pass) Code Inline trims spaces - 1 backticks; by_char;
+(pass) Code Inline x2 - 1 backticks;
+(pass) Code Inline x2 - 1 backticks; by_char;
+(pass) Code Inline - 2 backticks;
+(pass) Code Inline - 2 backticks; by_char;
+(pass) Code Inline trims spaces - 2 backticks;
+(pass) Code Inline trims spaces - 2 backticks; by_char;
+(pass) Code Inline x2 - 2 backticks;
+(pass) Code Inline x2 - 2 backticks; by_char; [0.04ms]
+(pass) Code ` Inline - 2 backticks;
+(pass) Code ` Inline - 2 backticks; by_char;
+(pass) Code Inline - 3 backticks;
+(pass) Code Inline - 3 backticks; by_char; [0.06ms]
+(pass) Code Inline trims spaces - 3 backticks; [0.02ms]
+(pass) Code Inline trims spaces - 3 backticks; by_char; [0.01ms]
+(pass) Code Inline x2 - 3 backticks;
+(pass) Code Inline x2 - 3 backticks; by_char;
+(pass) Code ` Inline - 3 backticks;
+(pass) Code ` Inline - 3 backticks; by_char;
+(pass) Code Inline - 4 backticks;
+(pass) Code Inline - 4 backticks; by_char; [0.03ms]
+(pass) Code Inline trims spaces - 4 backticks;
+(pass) Code Inline trims spaces - 4 backticks; by_char; [0.01ms]
+(pass) Code Inline x2 - 4 backticks; [0.01ms]
+(pass) Code Inline x2 - 4 backticks; by_char;
+(pass) Code ` Inline - 4 backticks;
+(pass) Code ` Inline - 4 backticks; by_char;
+(pass) Code with line break - 1 backticks;
+(pass) Code with line break - 1 backticks; by_char;
+(pass) Code with two line breaks - 1 backticks; [0.09ms]
+(pass) Code with two line breaks - 1 backticks; by_char; [0.02ms]
+(pass) Code with line break - 2 backticks; [0.01ms]
+(pass) Code with line break - 2 backticks; by_char;
+(pass) Code with two line breaks - 2 backticks; [0.02ms]
+(pass) Code with two line breaks - 2 backticks; by_char; [0.02ms]
+(pass) Empty Code_Fence - 3 backticks;
+(pass) Empty Code_Fence - 3 backticks; by_char;
+(pass) Code_Fence - 3 backticks;
+(pass) Code_Fence - 3 backticks; by_char;
+(pass) Code_Fence with language - 3 backticks; [0.07ms]
+(pass) Code_Fence with language - 3 backticks; by_char;
+(pass) Code_Fence escaped backticks - 3 backticks;
+(pass) Code_Fence escaped backticks - 3 backticks; by_char; [0.12ms]
+(pass) Code_Fence with unfinished end backticks - 3 backticks;
+(pass) Code_Fence with unfinished end backticks - 3 backticks; by_char;
+(pass) Empty Code_Fence - 4 backticks;
+(pass) Empty Code_Fence - 4 backticks; by_char;
+(pass) Code_Fence - 4 backticks;
+(pass) Code_Fence - 4 backticks; by_char;
+(pass) Code_Fence with language - 4 backticks;
+(pass) Code_Fence with language - 4 backticks; by_char;
+(pass) Code_Fence escaped backticks - 4 backticks;
+(pass) Code_Fence escaped backticks - 4 backticks; by_char;
+(pass) Code_Fence with unfinished end backticks - 4 backticks;
+(pass) Code_Fence with unfinished end backticks - 4 backticks; by_char;
+(pass) Empty Code_Fence - 5 backticks;
+(pass) Empty Code_Fence - 5 backticks; by_char;
+(pass) Code_Fence - 5 backticks;
+(pass) Code_Fence - 5 backticks; by_char;
+(pass) Code_Fence with language - 5 backticks;
+(pass) Code_Fence with language - 5 backticks; by_char;
+(pass) Code_Fence escaped backticks - 5 backticks;
+(pass) Code_Fence escaped backticks - 5 backticks; by_char;
+(pass) Code_Fence with unfinished end backticks - 5 backticks;
+(pass) Code_Fence with unfinished end backticks - 5 backticks; by_char;
+(pass) Code_Block; indent: '    ';
+(pass) Code_Block; indent: '    '; by_char;
+(pass) Code_Block multiple lines; indent: '    ';
+(pass) Code_Block multiple lines; indent: '    '; by_char;
+(pass) Code_Block end; indent: '    '; [0.35ms]
+(pass) Code_Block end; indent: '    '; by_char;
+(pass) Code_Block; indent: '   \t';
+(pass) Code_Block; indent: '   \t'; by_char;
+(pass) Code_Block multiple lines; indent: '   \t';
+(pass) Code_Block multiple lines; indent: '   \t'; by_char;
+(pass) Code_Block end; indent: '   \t';
+(pass) Code_Block end; indent: '   \t'; by_char;
+(pass) Code_Block; indent: '  \t'; [0.11ms]
+(pass) Code_Block; indent: '  \t'; by_char;
+(pass) Code_Block multiple lines; indent: '  \t';
+(pass) Code_Block multiple lines; indent: '  \t'; by_char;
+(pass) Code_Block end; indent: '  \t';
+(pass) Code_Block end; indent: '  \t'; by_char;
+(pass) Code_Block; indent: ' \t';
+(pass) Code_Block; indent: ' \t'; by_char;
+(pass) Code_Block multiple lines; indent: ' \t';
+(pass) Code_Block multiple lines; indent: ' \t'; by_char;
+(pass) Code_Block end; indent: ' \t';
+(pass) Code_Block end; indent: ' \t'; by_char;
+(pass) Code_Block; indent: '\t';
+(pass) Code_Block; indent: '\t'; by_char;
+(pass) Code_Block multiple lines; indent: '\t';
+(pass) Code_Block multiple lines; indent: '\t'; by_char; [0.17ms]
+(pass) Code_Block end; indent: '\t';
+(pass) Code_Block end; indent: '\t'; by_char;
+(pass) Italic & Bold "**bold*bold>em***';
+(pass) Italic & Bold "**bold*bold>em***'; by_char;
+(pass) Italic & Bold "***bold>em*bold**'; [0.10ms]
+(pass) Italic & Bold "***bold>em*bold**'; by_char; [0.02ms]
+(pass) Italic & Bold "*em**em>bold***'; [0.01ms]
+(pass) Italic & Bold "*em**em>bold***'; by_char;
+(pass) Italic & Bold "***bold>em**em*'; [0.03ms]
+(pass) Italic & Bold "***bold>em**em*'; by_char;
+(pass) Italic & Bold "__bold_bold>em___';
+(pass) Italic & Bold "__bold_bold>em___'; by_char; [0.03ms]
+(pass) Italic & Bold "___bold>em_bold__';
+(pass) Italic & Bold "___bold>em_bold__'; by_char;
+(pass) Italic & Bold "_em__em>bold___';
+(pass) Italic & Bold "_em__em>bold___'; by_char; [0.06ms]
+(pass) Italic & Bold "___bold>em__em_';
+(pass) Italic & Bold "___bold>em__em_'; by_char; [0.03ms]
+(pass) ItalicAst;
+(pass) ItalicAst; by_char; [0.01ms]
+(pass) ItalicAst space after begin; [0.03ms]
+(pass) ItalicAst space after begin; by_char;
+(pass) ItalicAst with Code;
+(pass) ItalicAst with Code; by_char;
+(pass) ItalicAst new Paragraph;
+(pass) ItalicAst new Paragraph; by_char;
+(pass) Escape ItalicAst Begin; [0.16ms]
+(pass) Escape ItalicAst Begin; by_char;
+(pass) Escape ItalicAst End;
+(pass) Escape ItalicAst End; by_char;
+(pass) ItalicUnd;
+(pass) ItalicUnd; by_char;
+(pass) ItalicUnd space after begin;
+(pass) ItalicUnd space after begin; by_char;
+(pass) ItalicUnd with Code; [0.02ms]
+(pass) ItalicUnd with Code; by_char; [0.02ms]
+(pass) ItalicUnd new Paragraph;
+(pass) ItalicUnd new Paragraph; by_char;
+(pass) Escape ItalicUnd Begin;
+(pass) Escape ItalicUnd Begin; by_char;
+(pass) Escape ItalicUnd End; [0.07ms]
+(pass) Escape ItalicUnd End; by_char;
+(pass) StrongAst; [0.02ms]
+(pass) StrongAst; by_char; [0.01ms]
+(pass) StrongAst space after begin;
+(pass) StrongAst space after begin; by_char; [0.03ms]
+(pass) StrongAst with Code;
+(pass) StrongAst with Code; by_char; [0.02ms]
+(pass) StrongAst new Paragraph;
+(pass) StrongAst new Paragraph; by_char;
+(pass) Escape StrongAst Begin;
+(pass) Escape StrongAst Begin; by_char;
+(pass) Escape StrongAst End;
+(pass) Escape StrongAst End; by_char; [0.09ms]
+(pass) StrongUnd;
+(pass) StrongUnd; by_char;
+(pass) StrongUnd space after begin;
+(pass) StrongUnd space after begin; by_char; [0.04ms]
+(pass) StrongUnd with Code;
+(pass) StrongUnd with Code; by_char; [0.01ms]
+(pass) StrongUnd new Paragraph;
+(pass) StrongUnd new Paragraph; by_char;
+(pass) Escape StrongUnd Begin;
+(pass) Escape StrongUnd Begin; by_char;
+(pass) Escape StrongUnd End;
+(pass) Escape StrongUnd End; by_char;
+(pass) Strike;
+(pass) Strike; by_char; [0.06ms]
+(pass) Strike space after begin;
+(pass) Strike space after begin; by_char;
+(pass) Strike with Code;
+(pass) Strike with Code; by_char;
+(pass) Strike new Paragraph;
+(pass) Strike new Paragraph; by_char;
+(pass) Escape Strike Begin;
+(pass) Escape Strike Begin; by_char;
+(pass) Escape Strike End;
+(pass) Escape Strike End; by_char;
+(pass) Escape Backtick;
+(pass) Escape Backtick; by_char;
+(pass) Escape Backslash;
+(pass) Escape Backslash; by_char;
+(pass) Escape normal char;
+(pass) Escape normal char; by_char; [0.03ms]
+(pass) Raw URL http://example.com/page; [0.01ms]
+(pass) Raw URL http://example.com/page; by_char;
+(pass) Raw URL in text http://example.com/page; [0.06ms]
+(pass) Raw URL in text http://example.com/page; by_char;
+(pass) Doesn't match urls in text;
+(pass) Doesn't match urls in text; by_char;
+(pass) Raw URL https://example.com/page;
+(pass) Raw URL https://example.com/page; by_char;
+(pass) Raw URL in text https://example.com/page;
+(pass) Raw URL in text https://example.com/page; by_char;
+(pass) Doesn't match urls in text;
+(pass) Doesn't match urls in text; by_char;
+(pass) Doesn't match not_urls as urls;
+(pass) Doesn't match not_urls as urls; by_char;
+(pass) Link; [0.22ms]
+(pass) Link; by_char;
+(pass) Link with code;
+(pass) Link with code; by_char;
+(pass) Link new paragraph;
+(pass) Link new paragraph; by_char; [0.06ms]
+(pass) Image;
+(pass) Image; by_char;
+(pass) Image with code;
+(pass) Image with code; by_char;
+(pass) Link with Image;
+(pass) Link with Image; by_char;
+(pass) Escaped link Begin;
+(pass) Escaped link Begin; by_char;
+(pass) Escaped link End;
+(pass) Escaped link End; by_char;
+(pass) Un-Escaped link Both;
+(pass) Un-Escaped link Both; by_char;
+(pass) Blockquote;
+(pass) Blockquote; by_char;
+(pass) Blockquote no-space;
+(pass) Blockquote no-space; by_char;
+(pass) Blockquote Escape;
+(pass) Blockquote Escape; by_char;
+(pass) Blockquote line break; [0.02ms]
+(pass) Blockquote line break; by_char;
+(pass) Blockquote continued;
+(pass) Blockquote continued; by_char;
+(pass) Blockquote end;
+(pass) Blockquote end; by_char;
+(pass) Blockquote heading;
+(pass) Blockquote heading; by_char;
+(pass) Blockquote codeblock; [0.14ms]
+(pass) Blockquote codeblock; by_char;
+(pass) Blockquote blockquote;
+(pass) Blockquote blockquote; by_char;
+(pass) Blockquote up blockquote;
+(pass) Blockquote up blockquote; by_char;
+(pass) Blockquote blockquote down; [0.06ms]
+(pass) Blockquote blockquote down; by_char; [0.02ms]
+(pass) Blockquote blockquote continued;
+(pass) Blockquote blockquote continued; by_char; [0.03ms]
+(pass) Blockquote up down;
+(pass) Blockquote up down; by_char;
+(pass) Blockquote with code and line break;
+(pass) Blockquote with code and line break; by_char;
+(pass) List Unordered; prefix: *;
+(pass) List Unordered; prefix: *; by_char;
+(pass) List Unordered with italic; prefix: *;
+(pass) List Unordered with italic; prefix: *; by_char;
+(pass) List Unordered two items; prefix: *;
+(pass) List Unordered two items; prefix: *; by_char;
+(pass) List Unordered with line break; prefix: *;
+(pass) List Unordered with line break; prefix: *; by_char;
+(pass) List Unordered end; prefix: *;
+(pass) List Unordered end; prefix: *; by_char;
+(pass) List Unordered after line break; prefix: *;
+(pass) List Unordered after line break; prefix: *; by_char;
+(pass) List Unordered with unchecked task; prefix: *; [0.35ms]
+(pass) List Unordered with unchecked task; prefix: *; by_char; [0.07ms]
+(pass) List Unordered with checked task; prefix: *;
+(pass) List Unordered with checked task; prefix: *; by_char;
+(pass) List Unordered with two tasks; prefix: *;
+(pass) List Unordered with two tasks; prefix: *; by_char; [0.05ms]
+(pass) List Unordered with link; prefix: *; [0.03ms]
+(pass) List Unordered with link; prefix: *; by_char;
+(pass) List Unordered nested list; prefix: *;
+(pass) List Unordered nested list; prefix: *; by_char;
+(pass) List Unordered failed nested list; prefix: *;
+(pass) List Unordered failed nested list; prefix: *; by_char;
+(pass) List Unordered nested ul multiple items; prefix: *; [0.07ms]
+(pass) List Unordered nested ul multiple items; prefix: *; by_char;
+(pass) List Unordered nested and un-nested; prefix: *; [0.06ms]
+(pass) List Unordered nested and un-nested; prefix: *; by_char;
+(pass) List Unordered; prefix: -;
+(pass) List Unordered; prefix: -; by_char;
+(pass) List Unordered with italic; prefix: -;
+(pass) List Unordered with italic; prefix: -; by_char;
+(pass) List Unordered two items; prefix: -;
+(pass) List Unordered two items; prefix: -; by_char;
+(pass) List Unordered with line break; prefix: -;
+(pass) List Unordered with line break; prefix: -; by_char;
+(pass) List Unordered end; prefix: -;
+(pass) List Unordered end; prefix: -; by_char;
+(pass) List Unordered after line break; prefix: -;
+(pass) List Unordered after line break; prefix: -; by_char;
+(pass) List Unordered with unchecked task; prefix: -;
+(pass) List Unordered with unchecked task; prefix: -; by_char;
+(pass) List Unordered with checked task; prefix: -;
+(pass) List Unordered with checked task; prefix: -; by_char;
+(pass) List Unordered with two tasks; prefix: -;
+(pass) List Unordered with two tasks; prefix: -; by_char;
+(pass) List Unordered with link; prefix: -;
+(pass) List Unordered with link; prefix: -; by_char;
+(pass) List Unordered nested list; prefix: -;
+(pass) List Unordered nested list; prefix: -; by_char;
+(pass) List Unordered failed nested list; prefix: -;
+(pass) List Unordered failed nested list; prefix: -; by_char;
+(pass) List Unordered nested ul multiple items; prefix: -; [0.35ms]
+(pass) List Unordered nested ul multiple items; prefix: -; by_char; [0.06ms]
+(pass) List Unordered nested and un-nested; prefix: -;
+(pass) List Unordered nested and un-nested; prefix: -; by_char;
+(pass) List Unordered; prefix: +;
+(pass) List Unordered; prefix: +; by_char;
+(pass) List Unordered with italic; prefix: +;
+(pass) List Unordered with italic; prefix: +; by_char;
+(pass) List Unordered two items; prefix: +; [0.10ms]
+(pass) List Unordered two items; prefix: +; by_char;
+(pass) List Unordered with line break; prefix: +;
+(pass) List Unordered with line break; prefix: +; by_char;
+(pass) List Unordered end; prefix: +;
+(pass) List Unordered end; prefix: +; by_char;
+(pass) List Unordered after line break; prefix: +;
+(pass) List Unordered after line break; prefix: +; by_char;
+(pass) List Unordered with unchecked task; prefix: +;
+(pass) List Unordered with unchecked task; prefix: +; by_char;
+(pass) List Unordered with checked task; prefix: +;
+(pass) List Unordered with checked task; prefix: +; by_char;
+(pass) List Unordered with two tasks; prefix: +;
+(pass) List Unordered with two tasks; prefix: +; by_char;
+(pass) List Unordered with link; prefix: +;
+(pass) List Unordered with link; prefix: +; by_char;
+(pass) List Unordered nested list; prefix: +;
+(pass) List Unordered nested list; prefix: +; by_char; [0.25ms]
+(pass) List Unordered failed nested list; prefix: +;
+(pass) List Unordered failed nested list; prefix: +; by_char;
+(pass) List Unordered nested ul multiple items; prefix: +;
+(pass) List Unordered nested ul multiple items; prefix: +; by_char;
+(pass) List Unordered nested and un-nested; prefix: +;
+(pass) List Unordered nested and un-nested; prefix: +; by_char;
+(pass) List Ordered; prefix: 1.;
+(pass) List Ordered; prefix: 1.; by_char;
+(pass) List Ordered with italic; prefix: 1.;
+(pass) List Ordered with italic; prefix: 1.; by_char;
+(pass) List Ordered two items; prefix: 1.;
+(pass) List Ordered two items; prefix: 1.; by_char;
+(pass) List Ordered with line break; prefix: 1.;
+(pass) List Ordered with line break; prefix: 1.; by_char;
+(pass) List Ordered end; prefix: 1.;
+(pass) List Ordered end; prefix: 1.; by_char;
+(pass) List Ordered after line break; prefix: 1.; [0.24ms]
+(pass) List Ordered after line break; prefix: 1.; by_char;
+(pass) List Ordered with unchecked task; prefix: 1.;
+(pass) List Ordered with unchecked task; prefix: 1.; by_char;
+(pass) List Ordered with checked task; prefix: 1.;
+(pass) List Ordered with checked task; prefix: 1.; by_char;
+(pass) List Ordered with two tasks; prefix: 1.;
+(pass) List Ordered with two tasks; prefix: 1.; by_char;
+(pass) List Ordered with link; prefix: 1.;
+(pass) List Ordered with link; prefix: 1.; by_char;
+(pass) List Ordered nested list; prefix: 1.;
+(pass) List Ordered nested list; prefix: 1.; by_char;
+(pass) List Ordered failed nested list; prefix: 1.; [0.15ms]
+(pass) List Ordered failed nested list; prefix: 1.; by_char;
+(pass) List Ordered nested ul multiple items; prefix: 1.;
+(pass) List Ordered nested ul multiple items; prefix: 1.; by_char;
+(pass) List Ordered nested and un-nested; prefix: 1.;
+(pass) List Ordered nested and un-nested; prefix: 1.; by_char;
+(pass) List Ordered; prefix: 420.;
+(pass) List Ordered; prefix: 420.; by_char;
+(pass) List Ordered with italic; prefix: 420.;
+(pass) List Ordered with italic; prefix: 420.; by_char;
+(pass) List Ordered two items; prefix: 420.;
+(pass) List Ordered two items; prefix: 420.; by_char;
+(pass) List Ordered with line break; prefix: 420.;
+(pass) List Ordered with line break; prefix: 420.; by_char;
+(pass) List Ordered end; prefix: 420.;
+(pass) List Ordered end; prefix: 420.; by_char;
+(pass) List Ordered after line break; prefix: 420.;
+(pass) List Ordered after line break; prefix: 420.; by_char;
+(pass) List Ordered with unchecked task; prefix: 420.;
+(pass) List Ordered with unchecked task; prefix: 420.; by_char; [0.29ms]
+(pass) List Ordered with checked task; prefix: 420.; [0.02ms]
+(pass) List Ordered with checked task; prefix: 420.; by_char;
+(pass) List Ordered with two tasks; prefix: 420.; [0.03ms]
+(pass) List Ordered with two tasks; prefix: 420.; by_char;
+(pass) List Ordered with link; prefix: 420.;
+(pass) List Ordered with link; prefix: 420.; by_char;
+(pass) List Ordered nested list; prefix: 420.;
+(pass) List Ordered nested list; prefix: 420.; by_char;
+(pass) List Ordered failed nested list; prefix: 420.; [0.05ms]
+(pass) List Ordered failed nested list; prefix: 420.; by_char;
+(pass) List Ordered nested ul multiple items; prefix: 420.;
+(pass) List Ordered nested ul multiple items; prefix: 420.; by_char;
+(pass) List Ordered nested and un-nested; prefix: 420.;
+(pass) List Ordered nested and un-nested; prefix: 420.; by_char;
+(pass) Failed nesting of ul in ol;
+(pass) Failed nesting of ul in ol; by_char;
+
+test/ansi.test.ts:
+
+
+Streaming Markdown
+
+[Image] version [Image] github
+
+Experiment making a streaming markdown parser à la ChatGPT.
+
+────────────────────────────────────────
+
+Installation
+
+Install streaming-markdown package from npm.
+
+npm install streaming-markdown
+
+Or just copy smd.js file to your project.
+
+Or use the CDN link.
+
+It's a minified (3kB Gzip) version of the package, with only the necessary functions exported.
+
+See the exports in smd_min_entry.js.
+
+The package uses ES module exports, so you need to use type="module" in your script tag.
+
+<script type="module">
+    import * as smd from "https://cdn.jsdelivr.net/npm/streaming-markdown/smd.min.js"
+    // ...
+</script>
+
+Usage
+
+First create new markdown Parser by calling parser function.
+
+It's single argument is a Renderer object, which is an interface to render the parsed markdown tokens to the DOM.
+
+There are two built-in renderers—default_renderer and logger_renderer—that you can try at first.
+
+import * as smd from "streaming-markdown"
+
+const element  = document.getElementById("markdown")
+const renderer = smd.default_renderer(element)
+const parser   = smd.parser(renderer)
+
+write function
+
+Then, you can start streaming markdown to the Parser by calling parser_write function with the chunk of markdown string.
+
+smd.parser_write(parser, "# Streaming Markdown\n\n")
+
+You can write as many times as you want to stream the markdown.
+
+The parser is optimistic.
+
+When it sees the start of an inline code block or code block,
+
+it will immediately style the element accordingly.
+
+E.g. `print("hello wor should be rendered as <code>print("hello wor</code>
+
+While the text is streamed in, the user should be able to select the text that has already been streamed in and copy it.
+
+(The parser is only adding new elements to the DOM, not modifying the existing ones.)
+
+end function
+
+Finally, you can end the stream by calling end function.
+
+It will reset the Parser state and flush the remaining markdown.
+
+smd.parser_end(parser)
+
+Markdown features
+
+ •  [ ]  Paragraphs
+ •  [ ]  Line breaks
+
+ •  [ ]  don't end tokens
+ •  [ ]  Escaping line breaks
+ •  [ ]  Trim unnecessary spaces
+ •  [ ]  Headers
+
+ •  [ ]  Alternate syntax (not planned)
+ •  [ ]  Code Block with indent
+ •  [ ]  Code Block with triple backticks
+
+ •  [ ]  language attr
+ •  [ ]  with many backticks
+ •  [ ]  `inline code` with backticks
+
+ •  [ ]  with many backticks
+ •  [ ]  trim spaces code
+ •  [ ]  italic with single asterisks
+ •  [ ]  Bold with double asterisks
+ •  [ ]  italic with underscores
+ •  [ ]  Bold with double underscores
+ •  [ ]  Special cases:
+
+ •  [ ]  boldbold>em
+ •  [ ]  bold>embold
+ •  [ ]  emem>bold
+ •  [ ]  bold>emem
+ •  [ ]  * or _ cannot be surrounded by spaces
+ •  [ ]  Strikethrough example
+ •  [ ]  Escape characters (e.g. * or _ with \* or \_)
+ •  [ ]  [Link](url)
+
+ •  [ ]  href attr
+ •  [ ]  Raw URLs
+
+ •  [ ]  http://example.com
+ •  [ ]  https://example.com
+ •  [ ]  www.example.com
+ •  [ ]  example@fake.com
+ •  [ ]  mailto:example@fake.com
+ •  [ ]  Autolinks
+
+ •  [ ]  www.example.com
+ •  [ ]  http://example.com
+ •  [ ]  https://example.com
+ •  [ ]  example@fake.com
+ •  [ ]  mailto:example@fake.com
+ •  [ ]  Reference-style Links
+ •  [ ]  Images
+
+ •  [ ]  src attr
+ •  [ ]  Horizontal rules
+
+ •  [ ]  With ---
+ •  [ ]  With ***
+ •  [ ]  With ___
+ •  [ ]  Unordered lists
+ •  [ ]  Ordered lists
+
+ •  [ ]  start attr
+ •  [ ]  Task lists
+ •  [ ]  Nested lists
+ •  [ ]  One-line nested lists
+ •  [ ]  Adding Elements in Lists
+ •  [ ]  Blockquotes
+ •  [ ]  Tables
+ •  [ ]  Subscript
+ •  [ ]  Superscript
+ •  [ ]  Emoji Shortcodes
+ •  [ ]  Html tags (e.g. <div>, <span>, <a>, <img>, etc.)17 |       writeToParser(parser, chunk)
+18 |     }
+19 | 
+20 |     endParser(parser)
+21 | 
+22 |     expect(parser.renderer.data.buffer).toMatchSnapshot()
+                                             ^
+error: expect(received).toMatchSnapshot(expected)
+
+Expected: 
+"
+
+[1mStreaming [22m[3m[1mMarkdown[22m[23m
+
+[35m[Image] [39m[34m[4mversion[24m[39m[34m (https://img.shields.io/npm/v/streaming-markdown?logo=npm)[39m[34m (https://www.npmjs.com/package/streaming-markdown)[39m [35m[Image] [39m[34m[4mg[24m[39m[34m[4mithub[24m[39m[34m (https://img.shields.io/badge/GitHub-streaming--markdown-orange?logo=github)[39m[34m (https://github.com/thetarnav/streaming-markdown)[39m
+
+[1mExperiment mak[22m[1ming a streaming markdown [22m[1mparser [22m[3m[1mà la ChatGPT.[22m[23m[2m[22m
+[2m[22m
+[2m────────────────────────────────────────[22m
+
+[1mInstallation[22m
+
+Install [100m[37mstreaming-markdown[39m[49m package from npm.
+
+[100m[37mnpm install streaming-[39m[49m[100m[37mmarkdown[39m[49m
+
+[3mOr just c[23m[3mopy [23m[100m[37m[1m[34m[4m[3msmd.js[23m[24m[39m[37m[22m[39m[49m[34m (https://github.com/thetarnav/streaming-markdown/blob/main/smd.js)[39m file to your project.
+
+Or use the [34m[4mCDN [24m[39m[34m[4mlink[24m[39m[34m (https://www.jsdelivr.com/package/npm/streaming-markdown)[39m.
+
+It's a minified [3m(3kB Gzip)[23m version of the package, with only the necessary functions exported.
+
+See the exports in [100m[37m[34m[4msmd_min_entry.js[24m[39m[37m[39m[49m[34m (https://github.com/thetarnav/streaming-markdown/blob/main/smd_min_entry.js)[39m.
+
+The package uses ES module exports, so you need to use [100m[37mtype="module"[39m[49m in your script tag.
+
+[100m[37m<script type="module[39m[49m[100m[37m">[39m[49m
+[100m[37m    import * as smd fr[39m[49m[100m[37mom "https://cdn.jsdelivr.[39m[49m[100m[37mnet/npm/streaming-markdow[39m[49m[100m[37mn/smd.min.js"[39m[49m
+[100m[37m    // ...[39m[49m[100m[37m[39m[49m
+[100m[37m</script>[39m[49m
+
+[1mUsage[22m
+
+First create new markdown [100m[37mParser[39m[49m by calling [100m[37mpar[39m[49m[100m[37mser[39m[49m function.
+
+It's single argument is a [100m[37mRendere[39m[49m[100m[37mr[39m[49m object, which is an interface to render the parsed markdown tokens to the DOM.
+
+There are two built-in renderers—[100m[37mdefault_[39m[49m[100m[37mrenderer[39m[49m and [100m[37mlogger_ren[39m[49m[100m[37mderer[39m[49m—that you can try at first.
+
+[100m[37mimport * [39m[49m[100m[37mas smd from "streaming-ma[39m[49m[100m[37mrkdown"[39m[49m
+[100m[37m[39m[49m
+[100m[37mconst element  =[39m[49m[100m[37m document.getElementById([39m[49m[100m[37m"markdown")[39m[49m
+[100m[37mconst rendere[39m[49m[100m[37mr = smd.default_renderer([39m[49m[100m[37melement)[39m[49m
+[100m[37mconst parser   =[39m[49m[100m[37m smd.parser(renderer)[39m[49m
+
+[100m[37m[1mwrite[22m[39m[49m function
+
+Then, you can start streaming markdown to the [100m[37mPars[39m[49m[100m[37mer[39m[49m by calling [100m[37mparser_wr[39m[49m[100m[37mite[39m[49m function with the chunk of markdown string.
+
+[100m[37msmd.parser_write(pa[39m[49m[100m[37mrser, "# Streaming Markdo[39m[49m[100m[37mwn
+
+")[39m[49m
+
+[3mYou can w[23m[3mrite [23m[1m[3mas many times as y[23m[22m[1m[3mou want[23m[22m to stream the markdown.
+
+The parser is optimistic.
+
+When it sees the start of an inline code block or code block,
+
+it will immediately style the element accordingly.
+
+E.g. [100m[37m`print("hello wor[39m[49m should be rendered as [100m[37m<code>print("hello wor<[39m[49m[100m[37m/code>[39m[49m
+
+While the text is streamed in, the user should be able to select the text that has already been streamed in and copy it.
+
+[3m(The parser is onl[23m[3my adding new elements to [23m[3mthe DOM, not modifying th[23m[3me existing ones.)[23m
+
+[100m[37m[1me[22m[39m[49m[100m[37m[1mnd[22m[39m[49m function
+
+Finally, you can end the stream by calling [100m[37mend[39m[49m function.
+
+It will reset the [100m[37mParser[39m[49m state and flush the remaining markdown.
+
+[100m[37msm[39m[49m[100m[37md.parser_end(parser)[39m[49m
+
+[1mMarkdown features[22m
+
+ •  [ ]  Paragraphs
+ •  [ ]  Line breaks
+
+ •  [ ]  don't end tokens
+ •  [ ]  Escaping line breaks
+ •  [ ]  Trim unnecessary spaces
+ •  [ ]  Headers
+
+ •  [ ]  [9mAl[29m[9mternate syntax[29m [3m(not pl[23m[3manned)[23m
+ •  [ ]  Code Block with indent
+ •  [ ]  Code Block with triple backticks
+
+ •  [ ]  language attr
+ •  [ ]  with many backticks
+ •  [ ]  [100m[37m`inline code[39m[49m[100m[37m`[39m[49m with backticks
+
+ •  [ ]  with many backticks
+ •  [ ]  trim spaces [100m[37mc[39m[49m[100m[37mode[39m[49m
+ •  [ ]  [3mitalic[23m with single asterisks
+ •  [ ]  [1mBold[22m with double asterisks
+ •  [ ]  [3mitalic[23m with underscores
+ •  [ ]  [1mBold[22m with double underscores
+ •  [ ]  Special cases:
+
+ •  [ ]  [1mbold[22m[3m[1mbold>em[22m[23m
+ •  [ ]  [3m[1mbold>em[22m[23mbold
+ •  [ ]  [3mem[23m[1m[3mem>bol[23m[22m[1m[3md[23m[22m
+ •  [ ]  [3m[1mbold>em[22m[23m[3mem[23m
+ •  [ ]  * or _ cannot be surrounded by spaces
+ •  [ ]  Strikethrough [9me[29m[9mxample[29m
+ •  [ ]  Escape characters (e.g. * or _ with * or _)
+ •  [ ]  [Link](url)
+
+ •  [ ]  [100m[37mhre[39m[49m[100m[37mf[39m[49m attr
+ •  [ ]  Raw URLs
+
+ •  [ ]  [34m[4mhttp://example.co[24m[39m[34m (http://example.com)[39m[34m[4mm[24m[39m
+ •  [ ]  [34m[4mhttps://examp[24m[39m[34m (https://example.com)[39m[34m[4mle.com[24m[39m
+ •  [ ]  www.example.com
+ •  [ ]  example@fake.com
+ •  [ ]  mailto:example@fake.com
+ •  [ ]  Autolinks
+
+ •  [ ]  www.example.com
+ •  [ ]  [34m (http://example.com)[39m[34m[4mhttp://example.com[24m[39m
+ •  [ ]  [34m (https://example.com)[39m[34m[4mhttps://example.com[24m[39m
+ •  [ ]  example@fake.com
+ •  [ ]  mailto:example@fake.com
+ •  [ ]  Reference-style Links
+ •  [ ]  Images
+
+ •  [ ]  [100m[37msrc[39m[49m attr
+ •  [ ]  Horizontal rules
+
+ •  [ ]  With [100m[37m---[39m[49m
+ •  [ ]  With [100m[37m***[39m[49m
+ •  [ ]  With [100m[37m_[39m[49m[100m[37m__[39m[49m
+ •  [ ]  Unordered lists
+ •  [ ]  Ordered lists
+
+ •  [ ]  [100m[37mstart[39m[49m attr
+ •  [ ]  Task lists
+ •  [ ]  Nested lists
+ •  [ ]  One-line nested lists
+ •  [ ]  Adding Elements in Lists
+ •  [ ]  Blockquotes
+ •  [ ]  Tables
+ •  [ ]  Subscript
+ •  [ ]  Superscript
+ •  [ ]  Emoji Shortcodes
+ •  [ ]  Html tags (e.g. [100m[37m<div>[39m[49m, [100m[37m<span>[39m[49m, [100m[37m<a>[39m[49m, [100m[37m<img>[39m[49m, etc.)"
+
+Received: 
+"
+
+Streaming Markdown
+
+[Image] version (https://img.shields.io/npm/v/streaming-markdown?logo=npm) (https://www.npmjs.com/package/streaming-markdown) [Image] github (https://img.shields.io/badge/GitHub-streaming--markdown-orange?logo=github) (https://github.com/thetarnav/streaming-markdown)
+
+Experiment making a streaming markdown parser à la ChatGPT.
+
+────────────────────────────────────────
+
+Installation
+
+Install streaming-markdown package from npm.
+
+npm install streaming-markdown
+
+Or just copy smd.js (https://github.com/thetarnav/streaming-markdown/blob/main/smd.js) file to your project.
+
+Or use the CDN link (https://www.jsdelivr.com/package/npm/streaming-markdown).
+
+It's a minified (3kB Gzip) version of the package, with only the necessary functions exported.
+
+See the exports in smd_min_entry.js (https://github.com/thetarnav/streaming-markdown/blob/main/smd_min_entry.js).
+
+The package uses ES module exports, so you need to use type="module" in your script tag.
+
+<script type="module">
+    import * as smd from "https://cdn.jsdelivr.net/npm/streaming-markdown/smd.min.js"
+    // ...
+</script>
+
+Usage
+
+First create new markdown Parser by calling parser function.
+
+It's single argument is a Renderer object, which is an interface to render the parsed markdown tokens to the DOM.
+
+There are two built-in renderers—default_renderer and logger_renderer—that you can try at first.
+
+import * as smd from "streaming-markdown"
+
+const element  = document.getElementById("markdown")
+const renderer = smd.default_renderer(element)
+const parser   = smd.parser(renderer)
+
+write function
+
+Then, you can start streaming markdown to the Parser by calling parser_write function with the chunk of markdown string.
+
+smd.parser_write(parser, "# Streaming Markdown\n\n")
+
+You can write as many times as you want to stream the markdown.
+
+The parser is optimistic.
+
+When it sees the start of an inline code block or code block,
+
+it will immediately style the element accordingly.
+
+E.g. \`print("hello wor should be rendered as <code>print("hello wor</code>
+
+While the text is streamed in, the user should be able to select the text that has already been streamed in and copy it.
+
+(The parser is only adding new elements to the DOM, not modifying the existing ones.)
+
+end function
+
+Finally, you can end the stream by calling end function.
+
+It will reset the Parser state and flush the remaining markdown.
+
+smd.parser_end(parser)
+
+Markdown features
+
+ •  [ ]  Paragraphs
+ •  [ ]  Line breaks
+
+ •  [ ]  don't end tokens
+ •  [ ]  Escaping line breaks
+ •  [ ]  Trim unnecessary spaces
+ •  [ ]  Headers
+
+ •  [ ]  Alternate syntax (not planned)
+ •  [ ]  Code Block with indent
+ •  [ ]  Code Block with triple backticks
+
+ •  [ ]  language attr
+ •  [ ]  with many backticks
+ •  [ ]  \`inline code\` with backticks
+
+ •  [ ]  with many backticks
+ •  [ ]  trim spaces code
+ •  [ ]  italic with single asterisks
+ •  [ ]  Bold with double asterisks
+ •  [ ]  italic with underscores
+ •  [ ]  Bold with double underscores
+ •  [ ]  Special cases:
+
+ •  [ ]  boldbold>em
+ •  [ ]  bold>embold
+ •  [ ]  emem>bold
+ •  [ ]  bold>emem
+ •  [ ]  * or _ cannot be surrounded by spaces
+ •  [ ]  Strikethrough example
+ •  [ ]  Escape characters (e.g. * or _ with \* or \_)
+ •  [ ]  [Link](url)
+
+ •  [ ]  href attr
+ •  [ ]  Raw URLs
+
+ •  [ ]  http://example.co (http://example.com)m
+ •  [ ]  https://examp (https://example.com)le.com
+ •  [ ]  www.example.com
+ •  [ ]  example@fake.com
+ •  [ ]  mailto:example@fake.com
+ •  [ ]  Autolinks
+
+ •  [ ]  www.example.com
+ •  [ ]   (http://example.com)http://example.com
+ •  [ ]   (https://example.com)https://example.com
+ •  [ ]  example@fake.com
+ •  [ ]  mailto:example@fake.com
+ •  [ ]  Reference-style Links
+ •  [ ]  Images
+
+ •  [ ]  src attr
+ •  [ ]  Horizontal rules
+
+ •  [ ]  With ---
+ •  [ ]  With ***
+ •  [ ]  With ___
+ •  [ ]  Unordered lists
+ •  [ ]  Ordered lists
+
+ •  [ ]  start attr
+ •  [ ]  Task lists
+ •  [ ]  Nested lists
+ •  [ ]  One-line nested lists
+ •  [ ]  Adding Elements in Lists
+ •  [ ]  Blockquotes
+ •  [ ]  Tables
+ •  [ ]  Subscript
+ •  [ ]  Superscript
+ •  [ ]  Emoji Shortcodes
+ •  [ ]  Html tags (e.g. <div>, <span>, <a>, <img>, etc.)"
+
+
+      at /Users/lewis/Development/streaming-markdown/test/ansi.test.ts:22:41
+(fail) Streaming Markdown Parser > should correctly parse and render markdown [23.10ms]
+
+1 tests failed:
+(fail) Streaming Markdown Parser > should correctly parse and render markdown [23.10ms]
+
+ 458 pass
+ 1 fail
+ snapshots: 1 failed
+ 463 expect() calls
+Ran 459 tests across 2 files. [70.00ms]
