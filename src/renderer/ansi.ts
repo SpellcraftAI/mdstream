@@ -1,7 +1,8 @@
+import chalk, { type ChalkInstance } from "chalk"
 import type { Renderer } from "@/types"
 import { Token, Attr } from "@/tokens"
-import type { ChalkInstance } from "chalk"
-import chalk from "chalk"
+import { createParser } from "@/parser"
+import { MarkdownStream } from "@/renderer/stream"
 
 export interface ANSIRendererData {
   buffer: string;
@@ -9,7 +10,11 @@ export interface ANSIRendererData {
   styles: ChalkInstance[];
 }
 
-export function createANSIRenderer(): Renderer<ANSIRendererData> {
+export interface ANSIRendererOptions {
+  render?: (chunk: string) => void;
+}
+
+export function createANSIRenderer({ render }: ANSIRendererOptions = {}): Renderer<ANSIRendererData> {
 
   return {
     addToken: (data, type) => {
@@ -78,7 +83,7 @@ export function createANSIRenderer(): Renderer<ANSIRendererData> {
       }
       
       data.buffer += data.prefix
-      process.stdout.write(data.prefix)
+      render?.(data.prefix)
     },
     endToken: (data) => {
       data.styles = []
@@ -89,7 +94,7 @@ export function createANSIRenderer(): Renderer<ANSIRendererData> {
       }
 
       data.buffer += text
-      process.stdout.write(text)
+      render?.(text)
     },
     setAttr: (data, type, value) => {
       if (type === Attr.HREF || type === Attr.SRC) {
@@ -101,5 +106,22 @@ export function createANSIRenderer(): Renderer<ANSIRendererData> {
       prefix: "",
       styles: [],
     },
+  }
+}
+
+
+export class MarkdownANSIStream extends MarkdownStream<ANSIRendererData> {
+  constructor() {
+    const ENCODER = new TextEncoder()
+    
+    super({
+      start: (controller) => {
+        const renderer = createANSIRenderer({
+          render: (chunk) => controller.enqueue(ENCODER.encode(chunk)),
+        })
+
+        return createParser(renderer)
+      }
+    })
   }
 }

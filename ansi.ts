@@ -6,7 +6,10 @@ import { createANSIRenderer } from "@/renderer/ansi"
 const source = await readFile("readme.md", "utf8")
 
 // const renderer = createLogRenderer()
-const renderer = createANSIRenderer()
+const renderer = createANSIRenderer({
+  render: (chunk) => process.stdout.write(chunk),
+})
+
 const parser = createParser(renderer)
 
 let i = 0
