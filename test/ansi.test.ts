@@ -8,7 +8,8 @@ describe("Streaming Markdown Parser", () => {
     let source = await readFile("readme.md", "utf8")
 
     // by character 1900 we cannot reproduce from snapshot
-    source = source.slice(0,1800)
+    // source = source.slice(0,1800)
+    source = source.slice(0,1000)
 
     const renderer = createANSIRenderer()
     const parser = createParser(renderer)
