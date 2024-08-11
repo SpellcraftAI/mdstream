@@ -1,23 +1,20 @@
-import { expect, test, describe, beforeAll, afterAll } from "bun:test"
+import { expect, test, describe, afterAll } from "bun:test"
 import { createParser, endParser, writeToParser } from "@/parser"
 import { createANSIRenderer } from "@/renderer/ansi"
 import { readFile } from "fs/promises"
+import chalk from "chalk"
 
-beforeAll(() => {
-  process.env.FORCE_COLOR = "1"
-})
+// TODO: Investigate error produced between character 1800-1900
 
-afterAll(() => {
-  delete process.env.FORCE_COLOR
-})
+// Store the original chalk level
+const originalChalkLevel = chalk.level
 
 describe("Streaming Markdown Parser", () => {
-  test("should correctly parse and render markdown", async () => {
-    let source = await readFile("readme.md", "utf8")
+  const testParser = async (useColor: boolean) => {
+    chalk.level = useColor ? 1 : 0
 
-    // by character 1900 we cannot reproduce from snapshot
-    source = source.slice(0,1800)
-    // source = source.slice(0,1000)
+    let source = await readFile("readme.md", "utf8")
+    source = source.slice(0, 1800)
 
     const renderer = createANSIRenderer()
     const parser = createParser(renderer)
@@ -30,7 +27,21 @@ describe("Streaming Markdown Parser", () => {
     }
 
     endParser(parser)
+    return parser.renderer.data.buffer
+  }
 
-    expect(parser.renderer.data.buffer).toMatchSnapshot()
+  test("should correctly parse and render markdown with color", async () => {
+    const result = await testParser(true)
+    expect(result).toMatchSnapshot("force-color")
+  })
+
+  test("should correctly parse and render markdown without color", async () => {
+    const result = await testParser(false)
+    expect(result).toMatchSnapshot("force-no-color")
+  })
+
+  afterAll(() => {
+    // Restore the original chalk level
+    chalk.level = originalChalkLevel
   })
 })
