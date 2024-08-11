@@ -7,4 +7,4 @@ https://github.com/thetarnav/streaming-markdown
 
 export { Token } from "./tokens"
 export { createParser, writeToParser, endParser } from "./parser"
-export { createHTMLRenderer } from "./renderer/html"
+export { createDOMRenderer } from "./renderer/dom"

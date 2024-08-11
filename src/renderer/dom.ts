@@ -2,16 +2,16 @@ import { Token } from "@/tokens"
 import type { Renderer, RendererAddToken } from "./types"
 import { serializeAttr } from "./utils"
 
-export interface HTMLRendererData {
+export interface DOMRendererData {
   nodes: Array<HTMLElement | undefined>;
   index: number;
 }
 
-export type HTMLRenderer = Renderer<HTMLRendererData>;
+export type DOMRenderer = Renderer<DOMRendererData>;
 
-export function createHTMLRenderer(root: HTMLElement): HTMLRenderer {
+export function createDOMRenderer(root: HTMLElement): DOMRenderer {
   return {
-    addToken: addTokenHTML,
+    addToken: addTokenToDOM,
     endToken: (data) => {
       data.index -= 1
     },
@@ -28,7 +28,7 @@ export function createHTMLRenderer(root: HTMLElement): HTMLRenderer {
   }
 }
 
-const addTokenHTML: RendererAddToken<HTMLRendererData> = (data, type) => {
+const addTokenToDOM: RendererAddToken<DOMRendererData> = (data, type) => {
   let mount: HTMLElement
   let slot: HTMLElement
 
