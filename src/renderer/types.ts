@@ -5,9 +5,9 @@ export type NodeAttrs = {[key in Attr]?: string};
 
 // Renderer types
 export type RendererAddToken<T> = (data: T, type: Token) => void;
-export type RendererEndToken<T> = (data: T) => void;
-export type RendererAddText<T> = (data: T, text: string) => void;
+export type RendererEndToken<T> = (data: T, type: Token) => void;
 export type RendererSetAttr<T> = (data: T, type: Attr, value: string) => void;
+export type RendererAddText<T> = (data: T, text: string) => void;
 
 export interface Renderer<T> {
     data: T;
