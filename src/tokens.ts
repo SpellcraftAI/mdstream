@@ -36,7 +36,8 @@ export enum Attr {
   SRC     = 2,
   LANG    = 4,
   CHECKED = 8,
-  START   = 16
+  START   = 16,
+  TYPE    = 32,
 }
 
 // Compound Token types

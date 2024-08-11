@@ -1,6 +1,6 @@
 import chalk, { type ChalkInstance } from "chalk"
 import type { Renderer } from "@/types"
-import { Token, Attr } from "@/tokens"
+import { Token } from "@/tokens"
 import { createParser } from "@/parser"
 import { MarkdownStream } from "@/renderer/stream"
 
@@ -15,7 +15,6 @@ export interface ANSIRendererOptions {
 }
 
 export function createANSIRenderer({ render }: ANSIRendererOptions = {}): Renderer<ANSIRendererData> {
-
   return {
     addToken: (data, type) => {
       data.prefix = ""
@@ -96,10 +95,10 @@ export function createANSIRenderer({ render }: ANSIRendererOptions = {}): Render
       data.buffer += text
       render?.(text)
     },
-    setAttr: (data, type, value) => {
-      if (type === Attr.HREF || type === Attr.SRC) {
-        data.buffer += chalk.blue(` (${value})`)
-      }
+    setAttr: () => {
+      // if (type === Attr.HREF || type === Attr.SRC) {
+      //   data.buffer += chalk.blue(` (${value})`)
+      // }
     },
     data: {
       buffer: "",

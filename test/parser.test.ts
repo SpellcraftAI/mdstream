@@ -1012,6 +1012,7 @@ for (const [c, token] of optimisticTests) {
         type    : Token.LIST_ITEM,
         children: [{
           type    : Token.CHECKBOX,
+          attrs: {[Attr.TYPE]: "checkbox"},
           children: [],
         }, " foo"]
       }]
@@ -1027,7 +1028,7 @@ for (const [c, token] of optimisticTests) {
         type    : Token.LIST_ITEM,
         children: [{
           type    : Token.CHECKBOX,
-          attrs   : {[Attr.CHECKED]: ""},
+          attrs   : {[Attr.CHECKED]: "", [Attr.TYPE]: "checkbox"},
           children: [],
         }, " foo"]
       }]
@@ -1044,13 +1045,14 @@ for (const [c, token] of optimisticTests) {
         type    : Token.LIST_ITEM,
         children: [{
           type    : Token.CHECKBOX,
+          attrs: {[Attr.TYPE]: "checkbox"},
           children: [],
         }, " foo"]
       }, {
         type    : Token.LIST_ITEM,
         children: [{
           type    : Token.CHECKBOX,
-          attrs   : {[Attr.CHECKED]: ""},
+          attrs   : {[Attr.CHECKED]: "", [Attr.TYPE]: "checkbox"},
           children: [],
         }, " bar"]
       }]

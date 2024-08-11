@@ -4,7 +4,7 @@ export interface MarkdownStreamOptions<T> {
   start: (controller: TransformStreamDefaultController<Uint8Array>) => Parser<T> | Promise<Parser<T>>
 }
 
-export class MarkdownStream<T> extends TransformStream<Uint8Array, Uint8Array> {
+export class MarkdownStream<T = undefined> extends TransformStream<Uint8Array, Uint8Array> {
   constructor({ start }: MarkdownStreamOptions<T>) {
     const DECODER = new TextDecoder()
     let parser: Parser<T>

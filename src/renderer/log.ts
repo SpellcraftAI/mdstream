@@ -1,27 +1,69 @@
+import chalk from "chalk"
 import type { Renderer } from "@/types"
+import { createParser } from "@/parser"
 import { Token } from "@/tokens"
 import { serializeAttr } from "./utils"
-import chalk from "chalk"
+import { MarkdownStream } from "./stream"
 
 export function labelToken(type: Token): typeof TOKEN_LABEL[Token] {
+  if (!(type in TOKEN_LABEL)) {
+    throw new Error(`Unknown token type: ${type}`)
+  }
+
   return TOKEN_LABEL[type]
 }
 
-export const createLogRenderer = (): Renderer<undefined> => ({
+export interface LogRendererOptions {
+  render?: (chunk: string) => void;
+}
+
+
+export const createLogRenderer = ({ render = console.log }: LogRendererOptions = {}): Renderer<undefined> => ({
   data: undefined,
   addToken: (_, type) => {
-    console.log(chalk.dim("addToken"), chalk.bold(labelToken(type)))
+    render?.(chalk.dim("ADDTOKEN"))
+    render?.(" ")
+    render?.(labelToken(type))
+    render?.("\n")
   },
-  endToken: (_) => {
-    console.log(chalk.dim("endToken"))
+  endToken: (_, type) => {
+    render?.(chalk.dim("ENDTOKEN"))
+    render?.(" ")
+    render?.(labelToken(type))
+    render?.("\n")
   },
   addText:  (_, text) => {
-    console.log(chalk.dim("addText"), chalk.bgWhiteBright(text))
+    render?.(chalk.dim("ADDTEXT"))
+    render?.(" ")
+    render?.(JSON.stringify(text))
+    render?.("\n")
   },
   setAttr:  (_, type, value) => {
-    console.log(chalk.dim("setAttr: %s=\"%s\""), serializeAttr(type), value)
+    render?.(chalk.dim("SETATTR"))
+    render?.(" ")
+    render?.(serializeAttr(type))
+    render?.(" ")
+    render?.(value)
+    render?.("\n")
   },
 })
+
+export class MarkdownLogStream extends MarkdownStream {
+  constructor() {
+    const ENCODER = new TextEncoder()
+    
+    super({
+      start: (controller) => {
+        const renderer = createLogRenderer({
+          render: (chunk) => controller.enqueue(ENCODER.encode(chunk)),
+        })
+
+        return createParser(renderer)
+      }
+    })
+  }
+}
+
 
 const TOKEN_LABEL: Readonly<Record<Token, string>> = {
   [Token.DOCUMENT]: "Document",

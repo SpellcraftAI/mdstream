@@ -4,12 +4,12 @@ import { Token, Attr } from "./tokens"
 const TOKEN_ARRAY_CAP = 24
 
 export interface Parser<T> {
+  token: Token;
   renderer: Renderer<T>;
   text: string;
   pending: string;
   tokens: Uint32Array;
   len: number;
-  token: number;
   spaces: Uint8Array;
   indent: string;
   indentLength: number;
@@ -61,7 +61,7 @@ function endToken<T>(parser: Parser<T>) {
   console.assert(parser.len > 0, "No nodes to end")
   parser.len -= 1
   parser.token = parser.tokens[parser.len]
-  parser.renderer.endToken(parser.renderer.data, parser.token)
+  parser.renderer.endToken(parser.renderer.data, parser.tokens[parser.len + 1])
 }
 
 function addToken<T>(parser: Parser<T>, token: Token) {
@@ -534,9 +534,11 @@ export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
       case 3:
         if (" " !== char) break // fail
         parser.renderer.addToken(parser.renderer.data, Token.CHECKBOX)
+        parser.renderer.setAttr(parser.renderer.data, Attr.TYPE, "checkbox")
         if ("x" === parser.pending[1]) {
           parser.renderer.setAttr(parser.renderer.data, Attr.CHECKED, "")
         }
+
         parser.renderer.endToken(parser.renderer.data, Token.CHECKBOX)
         parser.pending = " "
         continue
