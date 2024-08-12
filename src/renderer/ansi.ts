@@ -1,4 +1,4 @@
-import chalk, { type ChalkInstance } from "chalk"
+import chalk, { type ChalkInstance, type ColorSupportLevel } from "chalk"
 import type { Renderer } from "@/types"
 import { Token } from "@/tokens"
 import { createParser } from "@/parser"
@@ -11,10 +11,15 @@ export interface ANSIRendererData {
 }
 
 export interface ANSIRendererOptions {
+  level?: ColorSupportLevel;
   render?: (chunk: string) => void;
 }
 
-export function createANSIRenderer({ render }: ANSIRendererOptions = {}): Renderer<ANSIRendererData> {
+export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}): Renderer<ANSIRendererData> {
+  if (level !== undefined) {
+    chalk.level = level
+  }
+
   return {
     addToken: (data, type) => {
       data.prefix = ""
