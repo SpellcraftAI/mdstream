@@ -1,5 +1,5 @@
 import { expect, test, describe, afterAll } from "bun:test"
-import { createParser, endParser, writeToParser } from "@/parser"
+import { createParser, parse, finish } from "@/parser"
 import { createANSIRenderer, MarkdownANSIStream } from "@/renderer/ansi"
 import { readFile } from "fs/promises"
 import chalk from "chalk"
@@ -20,10 +20,10 @@ describe("Streaming Markdown Parser", () => {
     while (i < source.length) {
       const length = 16
       const chunk = source.slice(i, i += length)
-      writeToParser(parser, chunk)
+      parse(parser, chunk)
     }
 
-    endParser(parser)
+    finish(parser)
     return parser.renderer.data.buffer
   }
 

@@ -37,10 +37,10 @@
     const delay = Math.floor(Math.random() * 80) + 10
     const chunk = source.slice(i, i += length)
     await new Promise(resolve => setTimeout(resolve, delay))
-    smd.writeToParser(parser, chunk)
+    smd.parse(parser, chunk)
   }
 
-  smd.endParser(parser)
+  smd.finish(parser)
 </script>
 
 </html>

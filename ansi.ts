@@ -1,5 +1,5 @@
 // import { createLogRenderer } from "@/renderer/log"
-import { createParser, endParser, writeToParser } from "@/parser"
+import { createParser, endParser, parse } from "@/parser/parse"
 import { readFile } from "fs/promises"
 import { createANSIRenderer } from "@/renderer/ansi"
 
@@ -18,7 +18,7 @@ while (i < source.length) {
   const delay = Math.floor(Math.random() * 20) + 4
   const chunk = source.slice(i, i += length)
   await new Promise(resolve => setTimeout(resolve, delay))
-  writeToParser(parser, chunk)
+  parse(parser, chunk)
 }
 
 endParser(parser)

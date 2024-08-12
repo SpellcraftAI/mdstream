@@ -3,7 +3,7 @@ import * as t from "bun:test"
 import type { Children } from "@/types"
 import { Token, Attr } from "@/tokens"
 import { labelToken } from "@/renderer/log"
-import { createParser, endParser, writeToParser } from "@/parser"
+import { createParser, parse, finish } from "@/parser"
 
 import type { TestRendererNode  } from "./types"
 import { expectChildren, createTestRenderer } from "./utils"
@@ -18,8 +18,8 @@ function testSingleWrite<T extends string | TestRendererNode>(title: string, mar
     const renderer = createTestRenderer()
     const parser = createParser(renderer)
   
-    writeToParser(parser, markdown)
-    endParser(parser)
+    parse(parser, markdown)
+    finish(parser)
   
     expectChildren(renderer.data.root.children, expectedChildren)
   })
@@ -29,10 +29,10 @@ function testSingleWrite<T extends string | TestRendererNode>(title: string, mar
     const parser = createParser(renderer)
   
     for (const char of markdown) {
-      writeToParser(parser, char)
+      parse(parser, char)
     }
 
-    endParser(parser)
+    finish(parser)
     expectChildren(renderer.data.root.children, expectedChildren)
   })
 }

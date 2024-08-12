@@ -1,166 +1,13 @@
-import type { Renderer } from "./renderer/types"
-import { Token, Attr } from "./tokens"
+import { Token, Attr } from "@/tokens"
 
-const TOKEN_ARRAY_CAP = 24
-
-export interface Parser<T> {
-  token: Token;
-  renderer: Renderer<T>;
-  text: string;
-  pending: string;
-  tokens: Uint32Array;
-  len: number;
-  spaces: Uint8Array;
-  indent: string;
-  indentLength: number;
-  codeFenceBody: 0 | 1;
-  backticksCount: number;
-  blockquoteIndex: number;
-  hrChar: string;
-  hrChars: number;
-}
-
-export function createParser<T>(renderer: Renderer<T>): Parser<T> {
-  const tokens = new Uint32Array(TOKEN_ARRAY_CAP)
-  tokens[0] = Token.DOCUMENT
-  return {
-    renderer  : renderer,
-    text      : "",
-    pending   : "",
-    tokens    : tokens,
-    len       : 0,
-    token     : Token.DOCUMENT,
-    codeFenceBody: 0,
-    blockquoteIndex: 0,
-    hrChar   : "",
-    hrChars  : 0,
-    backticksCount: 0,
-    spaces    : new Uint8Array(TOKEN_ARRAY_CAP),
-    indent    : "",
-    indentLength: 0,
-  }
-}
-
-/**
- * Finish rendering the markdown - flushes any remaining text.
- */
-export function endParser<T>(parser: Parser<T>): void {
-  if (parser.pending.length > 0) {
-    writeToParser(parser, "\n")
-  }
-}
-
-function addText<T>(parser: Parser<T>) {
-  if (parser.text.length === 0) return
-  console.assert(parser.len > 0, "Never adding text to root")
-  parser.renderer.addText(parser.renderer.data, parser.text)
-  parser.text = ""
-}
-
-function endToken<T>(parser: Parser<T>) {
-  console.assert(parser.len > 0, "No nodes to end")
-  parser.len -= 1
-  parser.token = parser.tokens[parser.len]
-  parser.renderer.endToken(parser.renderer.data, parser.tokens[parser.len + 1])
-}
-
-function addToken<T>(parser: Parser<T>, token: Token) {
-  parser.len += 1
-  parser.tokens[parser.len] = token
-  parser.token = token
-  parser.renderer.addToken(parser.renderer.data, token)
-}
-
-function indexOfToken<T>(parser: Parser<T>, token: Token, startIndex: number) {
-  while (startIndex <= parser.len) {
-    if (parser.tokens[startIndex] & token) {
-      return startIndex
-    }
-    startIndex += 1
-  }
-  return -1
-}
-
-/**
- * End tokens until the parser has the given length.
- */
-function endTokensUntilLength<T>(parser: Parser<T>, len: number) {
-  while (parser.len > len) {
-    endToken(parser)
-  }
-}
-
-function continueOrAddList<T>(parser: Parser<T>, listToken: Token) {
-  /* will create a new list inside the last item
-	   if the amount of spaces is greater than the last one (with prefix)
-	   1. foo
-	      - bar      <- new nested ul
-	         - baz   <- new nested ul
-	      12. qux    <- cannot be nested in "baz" or "bar",
-	                    so it's a new list in "foo"
-	*/
-  let listIndex = -1
-  let itemIndex = -1
-
-  for (let i = parser.blockquoteIndex + 1; i <= parser.len; i++) {
-    if (parser.tokens[i] & Token.LIST_ITEM) {
-      if (parser.tokens[i-1] & listToken) {
-        listIndex = i-1
-      }
-
-      if (parser.indentLength < parser.spaces[i]) {
-        itemIndex = -1
-        break
-      }
-
-      itemIndex = i
-    }
-  }
-
-  if (itemIndex === -1) {
-    if (listIndex === -1) {
-      endTokensUntilLength(parser, parser.blockquoteIndex)
-      addToken(parser, listToken)
-    } else {
-      endTokensUntilLength(parser, listIndex)
-    }
-  } else {
-    endTokensUntilLength(parser, itemIndex)
-    addToken(parser, listToken)
-  }
-}
-
-/**
- * Create a new list
- * or continue the last one
- */
-function addListItem<T>(parser: Parser<T>, prefixLength: number) {
-  addToken(parser, Token.LIST_ITEM)
-  parser.spaces[parser.len] = parser.indentLength + prefixLength
-  clearRootPending(parser)
-  parser.token = Token.MAYBE_TASK
-}
-
-function clearRootPending<T>(parser: Parser<T>) {
-  parser.indent = ""
-  parser.indentLength = 0
-  parser.pending = ""
-}
-
-function isDigit(charcode: number) {
-  switch (charcode) {
-  case 48: case 49: case 50: case 51: case 52:
-  case 53: case 54: case 55: case 56: case 57:
-    return true
-  default:
-    return false
-  }
-}
+import type { Parser } from "./types"
+import { isDigit } from "./utils"
+import { addListItem, addText, addToken, clearRootPending, continueOrAddList, endToken, endTokensUntilLength, indexOfToken } from "./lib"
 
 /**
  * Parse and render another chunk of markdown.
  */
-export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
+export function parse<T>(parser: Parser<T>, chunk: string): void {
   for (const char of chunk) {
     const pendingWithChar = parser.pending + char
 		
@@ -297,7 +144,7 @@ export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
         ) {
           continueOrAddList(parser, Token.LIST_UNORDERED)
           addListItem(parser, 2)
-          writeToParser(parser, pendingWithChar.slice(2))
+          parse(parser, pendingWithChar.slice(2))
           continue
         }
 
@@ -333,7 +180,7 @@ export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
             addToken(parser, Token.PARAGRAPH)
             clearRootPending(parser)
             parser.backticksCount = 0
-            writeToParser(parser, pendingWithChar)
+            parse(parser, pendingWithChar)
           }
           continue
         case "\n":
@@ -431,7 +278,7 @@ export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
       }
 			
       clearRootPending(parser)
-      writeToParser(parser, toWrite)
+      parse(parser, toWrite)
       continue
     case Token.CODE_BLOCK:
       switch (pendingWithChar) {
@@ -546,7 +393,7 @@ export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
 
       parser.token = parser.tokens[parser.len]
       parser.pending = ""
-      writeToParser(parser, pendingWithChar)
+      parse(parser, pendingWithChar)
       continue
     case Token.STRONG_AST:
     case Token.STRONG_UND: {
@@ -658,7 +505,7 @@ export function writeToParser<T>(parser: Parser<T>, chunk: string): void {
         }
         else {
           parser.token = parser.tokens[parser.len]
-          writeToParser(parser, char)
+          parse(parser, char)
         }
       continue
     case Token.LINK:

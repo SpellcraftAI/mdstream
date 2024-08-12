@@ -1,4 +1,4 @@
-import { writeToParser, type Parser } from "@/parser"
+import { parse, type Parser } from "@/parser"
 
 export interface MarkdownStreamOptions<T> {
   start: (controller: TransformStreamDefaultController<Uint8Array>) => Parser<T> | Promise<Parser<T>>
@@ -16,7 +16,7 @@ export class MarkdownStream<T = undefined> extends TransformStream<Uint8Array, U
 
       transform: (chunk) => {
         const source = DECODER.decode(chunk)
-        writeToParser(parser, source)
+        parse(parser, source)
       }
     })
   }
