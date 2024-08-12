@@ -21,26 +21,26 @@
 </body>
 
 <script type="module">
-  import * as smd from "./dist/index.js"
+  import { parse, finish, createParser, createDOMRenderer } from "./dist/index.js"
 
   const response = await fetch("readme.md")
   const source = await response.text()
 
-  const container = /** @type {HTMLElement} */(document.getElementById("markdown"))
-  const renderer = smd.createDOMRenderer(container)
-  // const renderer = mds.createLogRenderer()
-  const parser = smd.createParser(renderer)
+  const container = document.getElementById("markdown")
+  const renderer = createDOMRenderer(container)
+  const parser = createParser(renderer)
 
   let i = 0
   while (i < source.length) {
     const length = Math.floor(Math.random() * 20) + 1
     const delay = Math.floor(Math.random() * 80) + 10
     const chunk = source.slice(i, i += length)
+
     await new Promise(resolve => setTimeout(resolve, delay))
-    smd.parse(parser, chunk)
+    parse(parser, chunk)
   }
 
-  smd.finish(parser)
+  finish(parser)
 </script>
 
 </html>

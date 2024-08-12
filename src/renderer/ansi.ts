@@ -79,7 +79,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         data.prefix = chalk.dim("\n\n" + "─".repeat(40))
         break
       case Token.LINE_BREAK:
-        data.prefix = "\n\n"
+        data.prefix = "\n"
         break
       case Token.CHECKBOX:
         data.prefix = " [ ] "

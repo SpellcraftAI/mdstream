@@ -9,9 +9,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thetarnav/streaming-markdown.git"
+    "url": "git+https://github.com/SpellcraftAI/mdstream"
   },
-  "homepage": "https://thetarnav.github.io/streaming-markdown",
+  "homepage": "https://github.com/SpellcraftAI/mdstream",
   "private": false,
   "sideEffects": false,
   "type": "module",
@@ -19,6 +19,7 @@
     "./dist/**/*"
   ],
   "module": "./dist/index.js",
+  "browser": "./dist/browser.js",
   "types": "./dist/index.d.ts",
   "exports": {
     "import": {
@@ -28,7 +29,9 @@
   },
   "scripts": {
     "dev": "bun dev.ts",
-    "build": "bun build src/index.ts --bundle --minify --outdir dist",
+    "build-browser": "bun build src/browser.ts --bundle --minify --outdir dist --format esm --outfile browser.js",
+    "build-lib": "bun build src/index.ts --bundle --minify --outdir dist --format esm",
+    "build": "bun build-lib && bun build-browser",
     "postbuild": "bun types",
     "types": "tsc -p tsconfig.types.json",
     "prepublishOnly": "bun run build && bun test"

@@ -6,6 +6,9 @@ import { serializeAttr } from "./utils"
 import { labelToken } from "./log"
 import chalk from "chalk"
 
+// TODO: Last chunk is not emitted because addToken is never called after.
+// For this example, that's the final closing parenthesis ")".
+
 function escapeHTML(unsafe: string): string {
   return unsafe
     .replace(/&/g, "&amp;")
