@@ -21,7 +21,7 @@ npm install streaming-markdown
 ```
 
 Or use the [CDN link](https://www.jsdelivr.com/package/npm/mdstream). The
-`browser` export is a minified **(2.6kB gzipped)** version of the package, with only
+`browser` export is a minified **(2.5kB gzipped)** version of the package, with only
 the parser methods and and DOM renderer exported.
 
 ```html
