@@ -1,9 +1,14 @@
-export function isDigit(charcode: number): boolean {
-  switch (charcode) {
-  case 48: case 49: case 50: case 51: case 52:
-  case 53: case 54: case 55: case 56: case 57:
-    return true
-  default:
-    return false
-  }
+/**
+ * Checks if a character code is for an ASCII digit (0-9, range 48-57).
+ * 
+ * @param charCode The character code of the character.
+ */
+export function isDigit(charCode: number): boolean {
+  /** 
+   * Negligible performance difference between comparison and switch/bitwise.
+   * Possible this pattern be better optimized by JIT compiler anyway.
+   * 
+   * @see https://jsperf.app/nitumi/2
+   */
+  return charCode >= 48 && charCode <= 57
 }
