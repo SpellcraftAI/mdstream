@@ -1,8 +1,11 @@
 {
-  "name": "streaming-markdown",
-  "version": "0.0.14",
-  "author": "Damian Tarnawski <gthetarnav@gmail.com>",
-  "description": "Streaming Markdown parser, à la ChatGPT",
+  "name": "mdstream",
+  "version": "0.0.15",
+  "author": "CTJ Lewis <lewis@spellcraft.org>",
+  "contributors": [
+    "Damian Tarnawski <gthetarnav@gmail.com>"
+  ],
+  "description": "Streaming markdown parser. Includes TransformStream<Uint8Array, Uint8Array> transformers and ANSI, HTML, and DOM renderers. Fork of streaming-markdown, most code by ~thetarnav.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,13 +18,12 @@
   "files": [
     "./dist/**/*"
   ],
-  "browser": "./smd.min.js",
-  "module": "./smd.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     "import": {
-      "types": "./smd.d.ts",
-      "default": "./smd.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
@@ -29,8 +31,7 @@
     "build": "bun build src/index.ts --bundle --minify --outdir dist",
     "postbuild": "bun types",
     "types": "tsc -p tsconfig.types.json",
-    "prepublishOnly": "node ./build.js",
-    "postpublish": "rm smd.d.* smd.min.js"
+    "prepublishOnly": "bun run build && bun test"
   },
   "devDependencies": {
     "@types/bun": "latest",
