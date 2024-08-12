@@ -1,4 +1,4 @@
-import { Attr } from "@/tokens"
+import { Attr } from "../tokens"
 
 export const AttrLabel: Readonly<Record<Attr, string>> = {
   [Attr.HREF]: "href",

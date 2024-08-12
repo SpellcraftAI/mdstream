@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test"
-import { MarkdownHTMLStream } from "@/renderer"
+import { MarkdownHTMLStream } from "../src/renderer"
 
 const encoder = new TextEncoder()
 

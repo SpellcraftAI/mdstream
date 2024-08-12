@@ -1,10 +1,12 @@
-import type { Renderer } from "@/types"
-import { Token } from "@/tokens"
-import { createParser } from "@/parser"
-import { MarkdownStream } from "@/renderer/stream"
+import chalk from "chalk"
+
+import type { Renderer } from "../types"
+import { Token } from "../tokens"
+import { createParser } from "../parser"
+import { MarkdownStream } from "../renderer"
+
 import { serializeAttr } from "./utils"
 import { labelToken } from "./log"
-import chalk from "chalk"
 
 // TODO: Last chunk is not emitted because addToken is never called after.
 // For this example, that's the final closing parenthesis ")".

@@ -1,4 +1,4 @@
-import { Token } from "@/tokens"
+import { Token } from "../tokens"
 import type { Renderer, RendererAddToken } from "./types"
 import { serializeAttr } from "./utils"
 

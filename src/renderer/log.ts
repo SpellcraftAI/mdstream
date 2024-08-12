@@ -1,7 +1,9 @@
 import chalk from "chalk"
-import type { Renderer } from "@/types"
-import { createParser } from "@/parser"
-import { Token } from "@/tokens"
+
+import type { Renderer } from "../types"
+import { createParser } from "../parser"
+import { Token } from "../tokens"
+
 import { serializeAttr } from "./utils"
 import { MarkdownStream } from "./stream"
 

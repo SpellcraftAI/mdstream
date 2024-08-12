@@ -1,5 +1,5 @@
-import type { Renderer } from "@/renderer"
-import type { Token } from "@/tokens"
+import type { Renderer } from "../renderer"
+import type { Token } from "../tokens"
 
 export interface Parser<T> {
   token: Token;

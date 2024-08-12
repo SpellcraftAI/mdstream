@@ -1,9 +1,9 @@
 import * as t from "bun:test"
 
-import type { Children } from "@/types"
-import { Token, Attr } from "@/tokens"
-import { labelToken } from "@/renderer/log"
-import { createParser, parse, finish } from "@/parser"
+import type { Children } from "../src/types"
+import { Token, Attr } from "../src/tokens"
+import { labelToken } from "../src/renderer/log"
+import { createParser, parse, finish } from "../src/parser"
 
 import type { TestRendererNode  } from "./types"
 import { expectChildren, createTestRenderer } from "./utils"

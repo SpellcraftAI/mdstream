@@ -1,4 +1,4 @@
-import { MarkdownHTMLStream } from "@/renderer"
+import { MarkdownHTMLStream } from "./src/renderer"
 
 const readme = Bun.file("readme.md")
 const text = await new Response(readme.stream().pipeThrough(new MarkdownHTMLStream())).text()

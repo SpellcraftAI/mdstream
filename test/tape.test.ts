@@ -1,6 +1,7 @@
 import { test, expect } from "bun:test"
-import { MarkdownLogStream } from "@/renderer/log"
 import chalk from "chalk"
+
+import { MarkdownLogStream } from "../src/renderer"
 
 const encoder = new TextEncoder()
 

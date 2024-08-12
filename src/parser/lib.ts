@@ -1,5 +1,5 @@
-import { Token } from "@/tokens"
-import type { Renderer } from "@/renderer"
+import { Token } from "../tokens"
+import type { Renderer } from "../renderer"
 
 import { parse } from "./parse"
 import type { Parser } from "./types"

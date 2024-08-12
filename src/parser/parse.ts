@@ -1,4 +1,4 @@
-import { Token, Attr } from "@/tokens"
+import { Token, Attr } from "../tokens"
 
 import type { Parser } from "./types"
 import { isDigit } from "./utils"

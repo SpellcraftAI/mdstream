@@ -1,4 +1,4 @@
-import { parse, type Parser } from "@/parser"
+import { parse, type Parser } from "../parser"
 
 export interface MarkdownStreamOptions<T> {
   start: (controller: TransformStreamDefaultController<Uint8Array>) => Parser<T> | Promise<Parser<T>>

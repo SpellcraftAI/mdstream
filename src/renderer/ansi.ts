@@ -1,8 +1,9 @@
 import chalk, { type ChalkInstance, type ColorSupportLevel } from "chalk"
-import type { Renderer } from "@/types"
-import { Token } from "@/tokens"
-import { createParser } from "@/parser"
-import { MarkdownStream } from "@/renderer/stream"
+
+import type { Renderer } from "../types"
+import { Token } from "../tokens"
+import { createParser } from "../parser"
+import { MarkdownStream } from "../renderer"
 
 export interface ANSIRendererData {
   buffer: string;

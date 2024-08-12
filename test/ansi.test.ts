@@ -1,8 +1,9 @@
 import { expect, test, describe, afterAll } from "bun:test"
-import { createParser, parse, finish } from "@/parser"
-import { createANSIRenderer, MarkdownANSIStream } from "@/renderer/ansi"
 import { readFile } from "fs/promises"
 import chalk from "chalk"
+
+import { createParser, parse, finish } from "../src/parser"
+import { createANSIRenderer, MarkdownANSIStream } from "../src/renderer/ansi"
 
 const originalChalkLevel = chalk.level
 const encoder = new TextEncoder()
