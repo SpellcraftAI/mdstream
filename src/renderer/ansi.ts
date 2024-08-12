@@ -116,12 +116,13 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
 
 
 export class MarkdownANSIStream extends MarkdownStream<ANSIRendererData> {
-  constructor() {
+  constructor(level?: ColorSupportLevel) {
     const ENCODER = new TextEncoder()
     
     super({
       start: (controller) => {
         const renderer = createANSIRenderer({
+          level,
           render: (chunk) => controller.enqueue(ENCODER.encode(chunk)),
         })
 

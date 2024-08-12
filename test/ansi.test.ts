@@ -3,7 +3,7 @@ import { readFile } from "fs/promises"
 import chalk from "chalk"
 
 import { createParser, parse, finish } from "../src/parser"
-import { createANSIRenderer, MarkdownANSIStream } from "../src/renderer/ansi"
+import { createANSIRenderer, MarkdownANSIStream } from "../src/renderer"
 
 const originalChalkLevel = chalk.level
 const encoder = new TextEncoder()
