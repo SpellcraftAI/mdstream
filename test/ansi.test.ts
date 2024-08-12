@@ -4,17 +4,12 @@ import { createANSIRenderer, MarkdownANSIStream } from "@/renderer/ansi"
 import { readFile } from "fs/promises"
 import chalk from "chalk"
 
-// TODO: Investigate error produced between character 1800-1900
-
-// Store the original chalk level
 const originalChalkLevel = chalk.level
 const encoder = new TextEncoder()
 
 describe("Streaming Markdown Parser", () => {
   const testParser = async () => {
     let source = await readFile("readme.md", "utf8")
-    source = source.slice(0, 1800)
-
     const renderer = createANSIRenderer({
       render: (chunk) => process.stdout.write(chunk),
     })
@@ -50,21 +45,13 @@ describe("Streaming Markdown Parser", () => {
     const stream = file.stream()
 
     let result = ""
-    // TODO: investigate
-    const maxLength = 1200
     const outputStream = new WritableStream({
       write(chunk) {
-        if (result.length <= maxLength) {
-          result += decoder.decode(chunk)
-        } else {
-          stream.cancel()
-        }
+        result += decoder.decode(chunk)
       }
     })
 
     await stream.pipeThrough(new MarkdownANSIStream()).pipeTo(outputStream)
-
-    // You might want to create a separate snapshot for this stream output
     return result
   }
 
@@ -81,7 +68,6 @@ describe("Streaming Markdown Parser", () => {
   })
 
   afterAll(() => {
-    // Restore the original chalk level
     chalk.level = originalChalkLevel
   })
 })
