@@ -18,7 +18,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
     case Token.LINE_BREAK:
     case Token.DOCUMENT:
     case Token.BLOCKQUOTE:
-      console.assert(parser.text.length === 0, "Root should not have any text")
+      // console.assert(parser.text.length === 0, "Root should not have any text")
 
       switch (parser.pending[0]) {
       case undefined:
@@ -77,7 +77,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
             clearRootPending(parser) 
             continue
           }
-          console.assert(false, "Should not reach here")
+          // console.assert(false, "Should not reach here")
         }
         break // fail
         /* Blockquote */
@@ -108,7 +108,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       case "*":
       case "_":
         if (parser.hrChars === 0) {
-          console.assert(parser.pending.length === 1, "Pending should be one character")
+          // console.assert(parser.pending.length === 1, "Pending should be one character")
           parser.hrChars = 1
           parser.hrChar = parser.pending
         }

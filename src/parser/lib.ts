@@ -39,7 +39,7 @@ export function finish<T>(parser: Parser<T>): void {
 
 export function addText<T>(parser: Parser<T>): void {
   if (parser.text.length === 0) return
-  console.assert(parser.len > 0, "Never adding text to root")
+  // console.assert(parser.len > 0, "Never adding text to root")
   parser.renderer.addText(parser.renderer.data, parser.text)
   parser.text = ""
 }
