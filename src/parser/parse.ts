@@ -574,7 +574,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       } else {
         const char_code = char.charCodeAt(0)
         parser.pending = ""
-        parser.text += isDigit(char_code)                   || // 0-9
+        parser.text += isDigit(char_code)              || // 0-9
 				          (char_code >= 65 && char_code <= 90) || // A-Z
 				          (char_code >= 97 && char_code <= 122)   // a-z
 				          ? pendingWithChar

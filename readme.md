@@ -4,6 +4,11 @@
 
 **Experiment making a streaming markdown parser *à la ChatGPT*.**
 
+| Version | Size (gzip) |
+|---------|----------------|
+| Full package | 16kB |
+| `browser.js` | 2.5kB |
+
 ## INTERNAL FORK
 
 *Original:* https://github.com/thetarnav/streaming-markdown
@@ -14,10 +19,10 @@
 
 ## Installation
 
-Install `streaming-markdown` package from npm.
+Install `mdstream` package from npm.
 
 ```bash
-npm install streaming-markdown
+bun i mdstream
 ```
 
 Or use the [CDN link](https://www.jsdelivr.com/package/npm/mdstream). The

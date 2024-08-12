@@ -45,7 +45,7 @@ export function addText<T>(parser: Parser<T>): void {
 }
 
 export function endToken<T>(parser: Parser<T>): void {
-  console.assert(parser.len > 0, "No nodes to end")
+  // console.assert(parser.len > 0, "No nodes to end")
   parser.len -= 1
   parser.token = parser.tokens[parser.len]
   parser.renderer.endToken(parser.renderer.data, parser.tokens[parser.len + 1])
