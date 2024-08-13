@@ -166,6 +166,11 @@ Displaying this README as a demo with delayed chunks:
 </script>
 ```
 
+### Testing
+
+> Blockquotes can span multiple lines.
+> Another line.
+
 ## Markdown features
 
 - [x] Paragraphs

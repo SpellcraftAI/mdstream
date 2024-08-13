@@ -1,5 +1,3 @@
-import chalk from "chalk"
-
 import type { Renderer } from "../types"
 import { Token } from "../tokens"
 import { createParser } from "../parser"
@@ -44,7 +42,7 @@ const SELF_CLOSING_TAGS = new Set(["br", "hr", "img", "input"])
 export function createHTMLRenderer({ render }: HTMLRenderOptions = {}): Renderer<HTMLRenderData> {
   return {
     addToken: (data, type) => {
-      console.log(chalk.dim("ADDTOKEN"), labelToken(type))
+      // console.log(chalk.dim("ADDTOKEN"), labelToken(type))
       const tag = getTagForToken(type)
       const openTag = `<${tag}`
       
@@ -84,7 +82,7 @@ export function createHTMLRenderer({ render }: HTMLRenderOptions = {}): Renderer
       render?.(escapeHTML(text))
     },
     endToken: (_, type) => {
-      console.log(chalk.dim("ENDTOKEN"), labelToken(type))
+      // console.log(chalk.dim("ENDTOKEN"), labelToken(type))
 
       const tag = getTagForToken(type)
       const closeTag =

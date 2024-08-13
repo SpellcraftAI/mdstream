@@ -245,7 +245,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         /* Add a line break and continue in previous token */
         parser.token = parser.tokens[parser.len]
         parser.renderer.addToken(parser.renderer.data, Token.LINE_BREAK)
-        parser.renderer.endToken(parser.renderer.data, Token.RULE)
+        parser.renderer.endToken(parser.renderer.data, Token.LINE_BREAK)
       }
       /* Code Block */
       else if (parser.indentLength >= 4) {

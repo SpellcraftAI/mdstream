@@ -1,35 +1,61 @@
-import chalk, { type ChalkInstance, type ColorSupportLevel } from "chalk"
-
 import type { Renderer } from "../types"
 import { Token } from "../tokens"
 import { createParser } from "../parser"
 import { MarkdownStream } from "../renderer"
+import { getStyleTags, setColorLevel, type AnsiStyle, type ColorSupportLevel } from "../chalk"
 
-export interface ANSIRendererData {
-  buffer: string;
-  prefix: string;
-  styles: ChalkInstance[];
-}
+const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
+  [Token.DOCUMENT]: [],
+  [Token.PARAGRAPH]: [],
+  [Token.HEADING_1]: ["bold"],
+  [Token.HEADING_2]: ["bold"],
+  [Token.HEADING_3]: ["bold"],
+  [Token.HEADING_4]: ["bold"],
+  [Token.HEADING_5]: ["bold"],
+  [Token.HEADING_6]: ["bold"],
+  [Token.BLOCKQUOTE]: ["dim"],
+  [Token.CODE_INLINE]: [],
+  [Token.CODE_BLOCK]: ["inverse"],
+  [Token.CODE_FENCE]: ["inverse"],
+  [Token.LIST_UNORDERED]: [],
+  [Token.LIST_ORDERED]: [],
+  [Token.LIST_ITEM]: [],
+  [Token.STRONG_AST]: ["bold"],
+  [Token.STRONG_UND]: ["bold"],
+  [Token.ITALIC_AST]: ["italic"],
+  [Token.ITALIC_UND]: ["italic"],
+  [Token.STRIKE]: ["strikethrough"],
+  [Token.LINK]: ["blue", "underline"],
+  [Token.RAW_URL]: ["blue", "underline"],
+  [Token.IMAGE]: [],
+  [Token.RULE]: ["dim"],
+  [Token.LINE_BREAK]: [],
+  [Token.CHECKBOX]: [],
+} as const
 
 export interface ANSIRendererOptions {
   level?: ColorSupportLevel;
   render?: (chunk: string) => void;
 }
 
-export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}): Renderer<ANSIRendererData> {
-  if (level !== undefined) {
-    chalk.level = level
-  }
+export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}): Renderer<undefined> {
+  setColorLevel(level)
 
+  let firstToken = true
+  let prefix = ""
   return {
-    addToken: (data, type) => {
-      data.prefix = ""
+    addToken: (_, type) => {
+      const prefixedNewline = firstToken ? "" : "\n"
+      let startingNewlines = ""
+
+      prefix = ""
+      firstToken = false
       
       switch (type) {
       case Token.DOCUMENT:
         break
       case Token.PARAGRAPH:
-        data.prefix = "\n\n"
+        startingNewlines = prefixedNewline.repeat(2)
         break
       case Token.HEADING_1:
       case Token.HEADING_2:
@@ -37,85 +63,75 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       case Token.HEADING_4:
       case Token.HEADING_5:
       case Token.HEADING_6:
-        data.styles.push(chalk.bold)
-        data.prefix = "\n\n"
+        startingNewlines = prefixedNewline.repeat(2)
         break
       case Token.BLOCKQUOTE:
-        data.styles.push(chalk.dim)
         break
       case Token.CODE_INLINE:
-        data.styles.push(chalk.bgGray.white)
         break
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:
-        data.prefix = "\n\n"
-        data.styles.push(chalk.bgGray.white)
+        startingNewlines = prefixedNewline.repeat(2)
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
-        data.prefix = "\n"
+        startingNewlines = prefixedNewline
         break
       case Token.LIST_ITEM:
-        data.prefix = "\n • "
+        startingNewlines = prefixedNewline
+        prefix = " • "
         break
       case Token.STRONG_AST:
       case Token.STRONG_UND:
-        data.styles.push(chalk.bold)
         break
       case Token.ITALIC_AST:
       case Token.ITALIC_UND:
-        data.styles.push(chalk.italic)
         break
       case Token.STRIKE:
-        data.styles.push(chalk.strikethrough)
         break
       case Token.LINK:
       case Token.RAW_URL:
-        data.styles.push(chalk.blue.underline)
         break
       case Token.IMAGE:
-        data.prefix = chalk.magenta("[Image] ")
+        prefix = "[Image] "
         break
       case Token.RULE:
-        data.prefix = chalk.dim("\n\n" + "─".repeat(40))
+        startingNewlines = prefixedNewline.repeat(2)
+        prefix =  "─".repeat(40)
         break
       case Token.LINE_BREAK:
-        data.prefix = "\n"
+        startingNewlines = prefixedNewline
         break
       case Token.CHECKBOX:
-        data.prefix = " [ ] "
+        prefix = " [ ] "
         break
       }
-      
-      data.buffer += data.prefix
-      render?.(data.prefix)
-    },
-    endToken: (data) => {
-      data.styles = []
-    },
-    addText: (data, text) => {
-      for (const style of data.styles) {
-        text = style(text)
-      }
 
-      data.buffer += text
+      render?.(startingNewlines)
+      const styles = ANSI_STYLES[type]
+      if (styles) {
+        const { open } = getStyleTags(styles)
+        render?.(open)
+      }
+      render?.(prefix)
+    },
+    endToken: (_, type) => {
+      const styles = ANSI_STYLES[type]
+      if (styles) {
+        const { close } = getStyleTags(styles)
+        render?.(close)
+      }
+    },
+    addText: (_, text) => {
       render?.(text)
     },
-    setAttr: () => {
-      // if (type === Attr.HREF || type === Attr.SRC) {
-      //   data.buffer += chalk.blue(` (${value})`)
-      // }
-    },
-    data: {
-      buffer: "",
-      prefix: "",
-      styles: [],
-    },
+    setAttr: () => {},
+    data: undefined,
   }
 }
 
 
-export class MarkdownANSIStream extends MarkdownStream<ANSIRendererData> {
+export class MarkdownANSIStream extends MarkdownStream<undefined> {
   constructor(level?: ColorSupportLevel) {
     const ENCODER = new TextEncoder()
     

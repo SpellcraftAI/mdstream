@@ -1,18 +1,22 @@
-import { expect, test, describe, afterAll } from "bun:test"
+import { expect, test, describe } from "bun:test"
 import { readFile } from "fs/promises"
-import chalk from "chalk"
 
 import { createParser, parse, finish } from "../src/parser"
 import { createANSIRenderer, MarkdownANSIStream } from "../src/renderer"
+import type { ColorSupportLevel } from "../src/chalk"
 
-const originalChalkLevel = chalk.level
 const encoder = new TextEncoder()
 
 describe("Streaming Markdown Parser", () => {
-  const testParser = async () => {
+  const testParser = async (level: ColorSupportLevel) => {
     let source = await readFile("readme.md", "utf8")
+    let buffer = ""
     const renderer = createANSIRenderer({
-      render: (chunk) => process.stdout.write(chunk),
+      render: (chunk) => {
+        buffer += chunk
+        process.stdout.write(chunk)
+      },
+      level
     })
 
     const parser = createParser(renderer)
@@ -25,22 +29,20 @@ describe("Streaming Markdown Parser", () => {
     }
 
     finish(parser)
-    return parser.renderer.data.buffer
+    return buffer
   }
 
-  test("should correctly parse and render markdown with color", async () => {
-    chalk.level = 1
-    const result = await testParser()
+  test("ANSI parser [color]", async () => {
+    const result = await testParser(1)
     expect(encoder.encode(result)).toMatchSnapshot("ansi-force-color")
   })
 
-  test("should correctly parse and render markdown without color", async () => {
-    chalk.level = 0
-    const result = await testParser()
+  test("ANSI parser [no color]", async () => {
+    const result = await testParser(0)
     expect(encoder.encode(result)).toMatchSnapshot("ansi-force-no-color")
   })
 
-  const testStream = async () => {
+  const testStream = async (level: ColorSupportLevel) => {
     const decoder = new TextDecoder()
     const file = Bun.file("readme.md")
     const stream = file.stream()
@@ -52,23 +54,17 @@ describe("Streaming Markdown Parser", () => {
       }
     })
 
-    await stream.pipeThrough(new MarkdownANSIStream()).pipeTo(outputStream)
+    await stream.pipeThrough(new MarkdownANSIStream(level)).pipeTo(outputStream)
     return result
   }
 
-  test("should correctly process markdown through MarkdownANSIStream", async () => {
-    chalk.level = 1
-    const result = await testStream()
+  test("MarkdownANSIStream [color]", async () => {
+    const result = await testStream(1)
     expect(encoder.encode(result)).toMatchSnapshot("markdown-ansi-stream-color")
   })
 
-  test("should correctly process markdown through MarkdownANSIStream", async () => {
-    chalk.level = 0
-    const result = await testStream()
+  test("MarkdownANSIStream [no color]", async () => {
+    const result = await testStream(0)
     expect(encoder.encode(result)).toMatchSnapshot("markdown-ansi-stream-no-color")
-  })
-
-  afterAll(() => {
-    chalk.level = originalChalkLevel
   })
 })

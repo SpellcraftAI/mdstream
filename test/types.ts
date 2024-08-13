@@ -1,6 +1,6 @@
-import type { Renderer } from "@/renderer/types"
-import type { Token } from "@/tokens"
-import type { Children, NodeAttrs } from "@/types"
+import type { Renderer } from "../src/renderer/types"
+import type { Token } from "../src/tokens"
+import type { Children, NodeAttrs } from "../src/types"
 
 export type ParentMap = Map<TestRendererNode, TestRendererNode>;
 

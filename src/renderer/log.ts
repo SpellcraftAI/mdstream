@@ -1,11 +1,10 @@
-import chalk from "chalk"
-
 import type { Renderer } from "../types"
 import { createParser } from "../parser"
 import { Token } from "../tokens"
 
 import { serializeAttr } from "./utils"
 import { MarkdownStream } from "./stream"
+import { chalk, ColorSupportLevel, setColorLevel } from "../chalk"
 
 export function labelToken(type: Token): typeof TOKEN_LABEL[Token] {
   if (!(type in TOKEN_LABEL)) {
@@ -23,25 +22,25 @@ export interface LogRendererOptions {
 export const createLogRenderer = ({ render = console.log }: LogRendererOptions = {}): Renderer<undefined> => ({
   data: undefined,
   addToken: (_, type) => {
-    render?.(chalk.dim("ADDTOKEN"))
+    render?.(chalk("ADDTOKEN", ["dim"]))
     render?.(" ")
     render?.(labelToken(type))
     render?.("\n")
   },
   endToken: (_, type) => {
-    render?.(chalk.dim("ENDTOKEN"))
+    render?.(chalk("ENDTOKEN", ["dim"]))
     render?.(" ")
     render?.(labelToken(type))
     render?.("\n")
   },
   addText:  (_, text) => {
-    render?.(chalk.dim("ADDTEXT"))
+    render?.(chalk("ADDTEXT", ["dim"]))
     render?.(" ")
     render?.(JSON.stringify(text))
     render?.("\n")
   },
   setAttr:  (_, type, value) => {
-    render?.(chalk.dim("SETATTR"))
+    render?.(chalk("SETATTR", ["dim"]))
     render?.(" ")
     render?.(serializeAttr(type))
     render?.(" ")
@@ -51,8 +50,9 @@ export const createLogRenderer = ({ render = console.log }: LogRendererOptions =
 })
 
 export class MarkdownLogStream extends MarkdownStream {
-  constructor() {
+  constructor(level: ColorSupportLevel) {
     const ENCODER = new TextEncoder()
+    setColorLevel(level)
     
     super({
       start: (controller) => {

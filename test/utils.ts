@@ -1,9 +1,9 @@
 import type { TestRenderer, TestRendererNode } from "./types"
 import { expect } from "bun:test"
 
-import { Token } from "@/tokens"
-import type { Children } from "@/renderer/types"
-import { labelToken } from "@/renderer/log"
+import { Token } from "../src/tokens"
+import type { Children } from "../src/renderer/types"
+import { labelToken } from "../src/renderer/log"
 
 export function createTestRenderer(): TestRenderer {
   const root: TestRendererNode = {
