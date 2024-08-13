@@ -43,6 +43,8 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
 
   let firstToken = true
   let prefix = ""
+  let listLevel = 0
+
   return {
     addToken: (_, type) => {
       const prefixedNewline = firstToken ? "" : "\n"
@@ -75,11 +77,12 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
-        startingNewlines = prefixedNewline
+        startingNewlines = listLevel < 1 ? prefixedNewline : ""
+        listLevel += 1
         break
       case Token.LIST_ITEM:
         startingNewlines = prefixedNewline
-        prefix = " • "
+        prefix = " ".repeat(listLevel * 2) + "• "
         break
       case Token.STRONG_AST:
       case Token.STRONG_UND:
@@ -103,7 +106,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         startingNewlines = prefixedNewline
         break
       case Token.CHECKBOX:
-        prefix = " [ ] "
+        prefix = "☐" // "✅"
         break
       }
 
@@ -116,6 +119,13 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       render?.(prefix)
     },
     endToken: (_, type) => {
+      switch (type) {
+      case Token.LIST_ORDERED:
+      case Token.LIST_UNORDERED:
+        listLevel -= 1
+        break
+      }
+
       const styles = ANSI_STYLES[type]
       if (styles) {
         const { close } = getStyleTags(styles)
