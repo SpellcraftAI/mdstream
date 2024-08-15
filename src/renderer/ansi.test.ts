@@ -1,9 +1,9 @@
 import { expect, test, describe } from "bun:test"
 import { readFile } from "fs/promises"
 
-import { createParser, parse, finish } from "../src/parser"
-import { createANSIRenderer, MarkdownANSIStream } from "../src/renderer"
-import type { ColorSupportLevel } from "../src/chalk"
+import { createANSIRenderer, MarkdownANSIStream } from "."
+import { createParser, parse, finish } from "../parser"
+import type { ColorSupportLevel } from "../chalk"
 
 const encoder = new TextEncoder()
 

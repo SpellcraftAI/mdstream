@@ -1,12 +1,12 @@
 import * as t from "bun:test"
 
-import type { Children } from "../src/types"
-import { Token, Attr } from "../src/tokens"
-import { labelToken } from "../src/renderer"
-import { createParser, parse, finish } from "../src/parser"
+import type { Children } from "../types"
+import { Token, Attr } from "../tokens"
+import { labelToken } from "../renderer"
+import { createParser, parse, finish } from "."
 
-import type { TestRendererNode  } from "./types"
-import { expectChildren, createTestRenderer } from "./utils"
+import type { TestRendererNode  } from "../../test/types"
+import { expectChildren, createTestRenderer } from "../../test/utils"
 
 const br: TestRendererNode = {
   type: Token.LINE_BREAK,
