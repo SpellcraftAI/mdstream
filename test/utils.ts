@@ -30,7 +30,7 @@ export function createTestRenderer(): TestRenderer {
         data.node.attrs[type] = value
       }
     },
-    addText: (data, text) => {
+    addText: (data, _, text) => {
       const lastChild = data.node.children[data.node.children.length - 1]
       if (typeof lastChild === "string") {
         data.node.children[data.node.children.length - 1] = lastChild + text

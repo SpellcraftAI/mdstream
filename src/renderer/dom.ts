@@ -1,4 +1,6 @@
+import { createParser } from "../parser"
 import { Token } from "../tokens"
+import { MarkdownStream } from "./stream"
 import type { Renderer, RendererAddToken } from "./types"
 import { serializeAttr } from "./utils"
 
@@ -15,7 +17,7 @@ export function createDOMRenderer(root: HTMLElement): DOMRenderer {
     endToken: (data) => {
       data.index -= 1
     },
-    addText: (data, text) => {
+    addText: (data, _, text) => {
       data.nodes[data.index]?.appendChild(document.createTextNode(text))
     },
     setAttr: (data, type, value) => {
@@ -136,4 +138,16 @@ const addTokenToDOM: RendererAddToken<DOMRendererData> = (data, type) => {
   data.nodes[data.index]?.appendChild(mount)
   data.index += 1
   data.nodes[data.index] = slot
+}
+
+export class MarkdownDOMStream extends MarkdownStream<DOMRendererData> {
+  constructor(root: HTMLElement) {
+    super({
+      start() {
+        const renderer = createDOMRenderer(root)
+        const parser = createParser(renderer)
+        return parser
+      },
+    })
+  }
 }

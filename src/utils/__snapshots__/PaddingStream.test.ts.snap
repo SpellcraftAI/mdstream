@@ -1,0 +1,37 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PaddingStream formats multi-line chunks correctly 1`] = `
+"**function hello() {**
+**  console.log('Hello, World!');**
+**  console.log('abcxyz');**
+**}**
+*****
+**function bye() {}**"
+`;
+
+exports[`PaddingStream formats multi-line chunks correctly: Chunk 1 1`] = `
+"**function hello() {**
+**"
+`;
+
+exports[`PaddingStream formats multi-line chunks correctly: Chunk 2 1`] = `
+"  console.log('Hello, World!');**
+**"
+`;
+
+exports[`PaddingStream formats multi-line chunks correctly: Chunk 3 1`] = `
+"  console.log('abcxyz');**
+**"
+`;
+
+exports[`PaddingStream formats multi-line chunks correctly: Chunk 4 1`] = `
+"}**
+**"
+`;
+
+exports[`PaddingStream formats multi-line chunks correctly: Chunk 5 1`] = `
+"***
+**"
+`;
+
+exports[`PaddingStream formats multi-line chunks correctly: Chunk 6 1`] = `"function bye() {}**"`;

@@ -3,6 +3,7 @@ import { Token } from "../tokens"
 import { createParser } from "../parser"
 import { MarkdownStream } from "../renderer"
 import { getStyleTags, setColorLevel, type AnsiStyle, type ColorSupportLevel } from "../chalk"
+import { Padding } from "../utils/PaddingStream"
 
 const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.DOCUMENT]: [],
@@ -14,7 +15,7 @@ const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.HEADING_5]: ["bold"],
   [Token.HEADING_6]: ["bold"],
   [Token.BLOCKQUOTE]: ["dim"],
-  [Token.CODE_INLINE]: [],
+  [Token.CODE_INLINE]: ["inverse"],
   [Token.CODE_BLOCK]: ["inverse"],
   [Token.CODE_FENCE]: ["inverse"],
   [Token.LIST_UNORDERED]: [],
@@ -42,18 +43,22 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
   setColorLevel(level)
 
   let firstToken = true
-  let prefix = ""
   let listLevel = 0
+  let prefix = ""
+  let suffix = ""
+
+  let padding: Padding
 
   return {
-    addToken: (_, type) => {
+    addToken: (_, token) => {
       const prefixedNewline = firstToken ? "" : "\n"
       let startingNewlines = ""
 
       prefix = ""
+      suffix = ""
       firstToken = false
       
-      switch (type) {
+      switch (token) {
       case Token.DOCUMENT:
         break
       case Token.PARAGRAPH:
@@ -70,9 +75,15 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       case Token.BLOCKQUOTE:
         break
       case Token.CODE_INLINE:
+        prefix = " "
+        suffix = " "
         break
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:
+        /**
+         * Create a new padding stream for this block.
+         */
+        padding = new Padding(1, 1, " ")
         startingNewlines = prefixedNewline.repeat(2)
         break
       case Token.LIST_UNORDERED:
@@ -111,31 +122,47 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       }
 
       render?.(startingNewlines)
-      const styles = ANSI_STYLES[type]
+      const styles = ANSI_STYLES[token]
       if (styles) {
         const { open } = getStyleTags(styles)
         render?.(open)
       }
       render?.(prefix)
     },
-    endToken: (_, type) => {
-      switch (type) {
+    endToken: (_, token) => {
+      switch (token) {
       case Token.LIST_ORDERED:
       case Token.LIST_UNORDERED:
         listLevel -= 1
         break
+
+      case Token.CODE_BLOCK:
+      case Token.CODE_FENCE:
+        render?.(padding.flush())
+        break
       }
 
-      const styles = ANSI_STYLES[type]
+      render?.(suffix)
+      const styles = ANSI_STYLES[token]
       if (styles) {
         const { close } = getStyleTags(styles)
         render?.(close)
       }
     },
-    addText: (_, text) => {
-      render?.(text)
+    addText: (_, token, text) => {
+      switch (token) {
+      case Token.CODE_BLOCK:
+      case Token.CODE_FENCE:
+        const padded = padding.processChunk(text)
+        render?.(padded)
+        break
+      default:
+        render?.(text)
+        break
+      }
     },
-    setAttr: () => {},
+    setAttr: () => {
+    },
     data: undefined,
   }
 }

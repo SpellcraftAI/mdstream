@@ -39,7 +39,7 @@ the parser methods and and DOM renderer exported.
 The package uses ES module exports, so you need to use `type="module"` in your
 script tag. See usage below.
 
-## Usage
+## Using the parser
 
 First create new markdown `Parser` by calling `parser` function. It's single
 argument is a `Renderer` object, which is an interface to render the parsed
@@ -51,13 +51,7 @@ markdown tokens to the DOM. The built-in renderers are:
 - `ANSIRenderer`, which renders to ANSI-styled text using `chalk`; and
 - `LogRenderer`, which prints the internal parser methods as they're called.
 
-```js
-import { parse, finish, createParser, DOMRenderer } as smd from "mdstream"
-
-const element  = document.getElementById("markdown")
-const renderer = createDOMRenderer(element)
-const parser   = createParser(renderer)
-```
+See **Examples** below.
 
 ### `parse` function
 
@@ -92,7 +86,7 @@ It will reset the `Parser` state and flush the remaining markdown.
 finish(parser)
 ```
 
-## Working with `ReadableStream<Uint8Array>`
+## Working with streams: `ReadableStream<Uint8Array>`
 
 To transform a `ReadableStream`, use `MarkdownStream` to create a
 `TransformStream<Uint8Array, Uint8Array>`. The built-in renderers come with
@@ -103,13 +97,48 @@ at runtime):
 - `MarkdownANSIStream`
 - `MarkdownLogStream`
 
-### Parsing to HTML
+### Render to DOM using parser
+
+```js
+import { parse, finish, createParser, createDOMRenderer } from "mdstream"
+
+const response = await fetch("readme.md")
+const source = await response.text()
+
+const container = document.getElementById("markdown")
+const renderer = createDOMRenderer(container)
+const parser = createParser(renderer)
+
+let i = 0
+while (i < source.length) {
+  const length = Math.floor(Math.random() * 20) + 1
+  const delay = Math.floor(Math.random() * 80) + 10
+  const chunk = source.slice(i, i += length)
+
+  await new Promise(resolve => setTimeout(resolve, delay))
+  parse(parser, chunk)
+}
+
+finish(parser)
+```
+
+### Streams: Rendering to HTML (server-side)
 
 ```ts
 const readme = Bun.file("readme.md")
 const response = new Response(
   readme.stream().pipeThrough(new MarkdownHTMLStream())
 )
+```
+
+### Streams: Rendering to DOM (client-side)
+
+```ts
+const container = document.getElementById("markdown")
+const response = await fetch("readme.md")
+await response.body
+  .pipeThrough(new MarkdownDOMStream(container))
+  .pipeTo(new WritableStream())
 ```
 
 ### Extending

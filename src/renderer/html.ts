@@ -62,7 +62,7 @@ export function createHTMLRenderer({ render }: HTMLRenderOptions = {}): Renderer
       // console.log(data.attributes)
       data.attributes[serializeAttr(type)] = escapeAttribute(value)
     },
-    addText: (data, text) => {
+    addText: (data, _, text) => {
       // console.log(chalk.dim("ADDTEXT"), text)
       if (data.firstTextChunk) {
         const attrs = Object.entries(data.attributes)
