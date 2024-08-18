@@ -4,6 +4,9 @@ import * as path from "node:path"
 import * as url  from "node:url"
 import * as http from "node:http"
 import * as ws   from "ws"
+import * as zlib from "node:zlib"
+import * as stream from "node:stream"
+import { promisify } from "node:util"
 
 const DIRNAME         = path.dirname(url.fileURLToPath(import.meta.url))
 const INDEX_HTML_PATH = path.join(DIRNAME, "index.html")
@@ -167,7 +170,9 @@ function matchesAcceptsHeader(accept: string | undefined, mimeType: string) {
   }
 }
 
-function streamStatic(req: http.IncomingMessage, res: http.ServerResponse, filepath: string) {
+const pipeline = promisify(stream.pipeline)
+
+async function streamStatic(req: http.IncomingMessage, res: http.ServerResponse, filepath: string) {
   const ext = getExt(filepath)
   const mimeType = getMimeType(ext)
 
@@ -175,13 +180,29 @@ function streamStatic(req: http.IncomingMessage, res: http.ServerResponse, filep
     return end404(req, res)
   }
 
-  void res.writeHead(200, {"Content-Type": mimeType})
+  const acceptEncoding = req.headers["accept-encoding"] as string | undefined
+  const supportsGzip = acceptEncoding && acceptEncoding.includes("gzip")
 
-  const stream = fs.createReadStream(filepath)
-  void stream.pipe(res)
+  const headers: Record<string, string> = {
+    "Content-Type": mimeType,
+    "Vary": "Accept-Encoding"
+  }
 
-   
-  console.log(`${req.method} ${req.url} 200`)
+  let content: Buffer
+  if (supportsGzip) {
+    headers["Content-Encoding"] = "gzip"
+    const fileContent = await fsp.readFile(filepath)
+    content = await promisify(zlib.gzip)(fileContent, { level: 9 })
+  } else {
+    content = await fsp.readFile(filepath)
+  }
+
+  headers["Content-Length"] = content.length.toString()
+
+  res.writeHead(200, headers)
+  res.end(content)
+
+  console.log(`${req.method} ${req.url} 200 ${supportsGzip ? "(gzipped)" : ""} ${content.length} bytes`)
 }
 
 

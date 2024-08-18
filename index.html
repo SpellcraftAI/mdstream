@@ -6,7 +6,7 @@
   <meta name="darkreader-lock">
 
   <link rel="preload" href="readme.md" as="fetch" type="text/plain" crossorigin="anonymous" />
-  <link rel="preload" href="dist/index.js" as="script" crossorigin="anonymous" />
+  <link rel="preload" href="dist/browser.js" as="script" crossorigin="anonymous" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
 </body>
 
 <script type="module">
-  import { parse, finish, createParser, createDOMRenderer } from "./dist/index.js"
+  import { parse, finish, createParser, createDOMRenderer } from "./dist/browser.js"
 
   const response = await fetch("readme.md")
   const source = await response.text()
