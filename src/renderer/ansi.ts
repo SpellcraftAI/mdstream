@@ -39,6 +39,16 @@ export interface ANSIRendererOptions {
   render?: (chunk: string) => void;
 }
 
+const wrapLinesWithStyles = (text: string, activeStyles: AnsiPair[]) => {
+  const lines = text.split("\n")
+  if (lines.length > 1) {
+    const openTags = activeStyles.map(({ open }) => open).join("")
+    text = lines.join("\n" + openTags)
+  }
+
+  return text
+}
+
 export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}): Renderer<undefined> {
   setColorLevel(level)
 
@@ -160,22 +170,22 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
        * This is to prevent boxes or other transforms that work with newlines
        * from interrupting the multiline styling, so it's restarted each line.
        */
-      const lines = text.split("\n")
-      if (lines.length > 1) {
-        const openTags = activeStyles.map(({ open }) => open).join("")
-        text = lines.join("\n" + openTags)
-      }
+      // const lines = text.split("\n")
+      // if (lines.length > 1) {
+      //   const openTags = activeStyles.map(({ open }) => open).join("")
+      //   text = lines.join("\n" + openTags)
+      // }
 
       switch (token) {
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:
-        const padded = padding.processChunk(text)
-        render?.(padded)
-        break
-      default:
-        render?.(text)
+        text = padding.processChunk(text)
+        // render?.(wrapLinesWithStyles(padded, activeStyles))
         break
       }
+
+      const withStyledLines = wrapLinesWithStyles(text, activeStyles)
+      render?.(withStyledLines)
     },
     setAttr: () => {
     },
