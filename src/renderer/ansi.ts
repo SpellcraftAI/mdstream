@@ -2,7 +2,7 @@ import type { Renderer } from "../types"
 import { Token } from "../tokens"
 import { createParser } from "../parser"
 import { MarkdownStream } from "../renderer"
-import { getStyleTags, setColorLevel, type AnsiStyle, type ColorSupportLevel } from "../chalk"
+import { getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
 import { Padding } from "../utils/PaddingStream"
 
 const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
@@ -48,6 +48,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
   let suffix = ""
 
   let padding: Padding
+  const activeStyles: AnsiPair[] = []
 
   return {
     addToken: (_, token) => {
@@ -124,8 +125,9 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       render?.(startingNewlines)
       const styles = ANSI_STYLES[token]
       if (styles) {
-        const { open } = getStyleTags(styles)
-        render?.(open)
+        const tags = getStyleTags(styles)
+        render?.(tags.open)
+        activeStyles.push(tags)
       }
       render?.(prefix)
     },
@@ -145,11 +147,37 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       render?.(suffix)
       const styles = ANSI_STYLES[token]
       if (styles) {
-        const { close } = getStyleTags(styles)
-        render?.(close)
+        const tags = getStyleTags(styles)
+        activeStyles.pop()
+        render?.(tags.close)
       }
     },
     addText: (_, token, text) => {
+
+      /**
+       * For multiline text, we will make sure to end the ANSI sequence at the
+       * end of the line, and re-start it at the beginning of the next line.
+       * 
+       * This is to prevent boxes or other transforms that work with newlines
+       * from interrupting the multiline styling, so it's restarted each line.
+       */
+      const lines = text.split("\n")
+      if (lines.length > 1) {
+        const openTags = activeStyles.map(({ open }) => open).join("")
+        // const closeTags = activeStyles.map(({ close }) => close).reverse().join("")
+        // let rewritten = ""
+        // for (let i = 0; i < lines.length; i++) {
+        //   const line = lines[i]
+        //   rewritten += line
+
+        //   if (i < lines.length - 1) {
+        //     rewritten += "\n" + openTags
+        //   }
+        // }
+
+        text = lines.join("\n" + openTags)
+      }
+
       switch (token) {
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:

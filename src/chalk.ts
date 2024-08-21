@@ -76,7 +76,9 @@ export function chalk(text: string, styles: AnsiStyle[] = [], options: ChalkOpti
   return `${openTags}${text}${closeTags}`
 }
 
-export function getStyleTags(styles: AnsiStyle[], options: ChalkOptions = { level }): { open: string; close: string } {
+export type AnsiPair = { open: string; close: string };
+
+export function getStyleTags(styles: AnsiStyle[], options: ChalkOptions = { level }): AnsiPair {
   const colorLevel = options?.level ?? level
 
   if (colorLevel === 0) {
