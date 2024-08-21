@@ -153,7 +153,6 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       }
     },
     addText: (_, token, text) => {
-
       /**
        * For multiline text, we will make sure to end the ANSI sequence at the
        * end of the line, and re-start it at the beginning of the next line.
@@ -164,17 +163,6 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       const lines = text.split("\n")
       if (lines.length > 1) {
         const openTags = activeStyles.map(({ open }) => open).join("")
-        // const closeTags = activeStyles.map(({ close }) => close).reverse().join("")
-        // let rewritten = ""
-        // for (let i = 0; i < lines.length; i++) {
-        //   const line = lines[i]
-        //   rewritten += line
-
-        //   if (i < lines.length - 1) {
-        //     rewritten += "\n" + openTags
-        //   }
-        // }
-
         text = lines.join("\n" + openTags)
       }
 
