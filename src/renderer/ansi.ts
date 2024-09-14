@@ -2,7 +2,7 @@ import type { Renderer } from "../types"
 import { Token } from "../tokens"
 import { createParser } from "../parser"
 import { labelToken, MarkdownStream } from "../renderer"
-import { getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
+import { chalk, getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
 import { Padding } from "../utils/PaddingStream"
 
 const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
@@ -16,8 +16,8 @@ const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.HEADING_6]: ["bold"],
   [Token.BLOCKQUOTE]: ["dim"],
   [Token.CODE_INLINE]: ["inverse"],
-  [Token.CODE_BLOCK]: ["inverse"],
-  [Token.CODE_FENCE]: ["inverse"],
+  [Token.CODE_BLOCK]: ["dim"],
+  [Token.CODE_FENCE]: ["dim"],
   [Token.LIST_UNORDERED]: [],
   [Token.LIST_ORDERED]: [],
   [Token.LIST_ITEM]: [],
@@ -63,7 +63,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
   return {
     addToken: (_, token) => {
       // if (process.env.NODE_ENV !== "production") {
-      //   console.log(styleText("dim", "ADDTOKEN"), labelToken(token))
+      //   console.log(chalk("ADD_TOKEN", ["dim"]), labelToken(token))
       // }
 
       const prefixedNewline = firstToken ? "" : "\n"
@@ -103,7 +103,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
-        startingNewlines = listLevel < 1 ? prefixedNewline : ""
+        // startingNewlines = prefixedNewline
         listLevel += 1
         break
       case Token.LIST_ITEM:
@@ -171,7 +171,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
     },
     addText: (_, token, text) => {
       // if (process.env.NODE_ENV !== "production") {
-      //   console.log(styleText("dim", "ADDTEXT"), labelToken(token), JSON.stringify(text))
+      //   console.log(chalk("ADD_TEXT", ["dim"]), labelToken(token), JSON.stringify(text))
       // }
       /**
        * For multiline text, we will make sure to end the ANSI sequence at the

@@ -311,9 +311,8 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
     case Token.CODE_FENCE:
       switch (char) {
       case "`":
-        if (pendingWithChar.length ===
-					parser.backticksCount + parser.codeFenceBody // 0 or 1 for \n
-        ) {
+        // console.log(chalk("CODE_FENCE", ["dim"]), { char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
+        if (parser.backticksCount >= 3) {
           addText(parser)
           endToken(parser)
           parser.pending = ""
@@ -608,9 +607,11 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       } else if ("\n" === char) {
         if (parser.backticksCount >= 3) {
           // addText(parser)
-          addToken(parser, Token.CODE_FENCE)
           parser.pending = ""
           parser.backticksCount = 0
+          parser.codeFenceBody = 0
+          addText(parser)
+          addToken(parser, Token.CODE_FENCE)
         } else {
           parser.pending = char
           addText(parser)
@@ -618,14 +619,15 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
 
       } else {
         if (parser.backticksCount === 1) {
-          addToken(parser, Token.CODE_INLINE)
           parser.pending = char
+          addText(parser)
+          addToken(parser, Token.CODE_INLINE)
           continue
         }
 
         // console.log(chalk("CHAR_ELSE", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
 
-        addText(parser)
+        // addText(parser)
         // parser.text = ""
         parser.pending = char
       }

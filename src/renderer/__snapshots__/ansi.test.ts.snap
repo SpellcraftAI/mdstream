@@ -6,65 +6,18 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
   "",
   "",
   "I",
-  "nl",
-  "ine c",
-  "ode: ",
+  "nli",
+  "ne co",
+  "de: ",
   "",
   "[7m",
   " ",
-  "inlin",
-  "e",
+  "inline",
   " ",
   "[27m",
   " ",
   "",
-  
-"
-
-"
-,
   "",
-  "",
-  "B",
-  "lock",
-  ":",
-  "",
-  "",
-  
-"
-
-"
-,
-  "[7m",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "console.log("Hello, world!") ",
-  "",
-  "[27m",
-  
-"
-
-"
-,
-  "",
-  "",
-  "H",
-  "e",
-  "re's ",
-  "a lis",
-  "t:",
-  "",
-  "",
-  
-"
-"
-,
   "",
   "",
   
@@ -73,73 +26,141 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "Firs",
-  "t ite",
+  "Here",
+  "'s a ",
+  "Pytho",
+  "n fun",
+  "ction",
+  " to g",
+  "reet ",
+  "someo",
+  "ne:",
+  
+"
+
+"
+,
+  "[2m",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"    def greet(name): 
+[2m "
+,
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"       return f"Hello, {name}!" 
+[2m "
+,
+  
+"                                   
+[2m "
+,
+  "",
+  "",
+  "",
+  "",
+  
+"   print(greet("World")) 
+[2m "
+,
+  "    ",
+  "",
+  "[22m",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"
+"
+,
+  "",
+  "  • ",
+  "N",
+  "ow, l",
+  "et's ",
+  "try a",
+  " Java",
+  "Scrip",
+  "t exa",
+  "mple:",
+  
+"
+
+"
+,
+  "[2m",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"    function calculateArea(radius) { 
+[2m "
+,
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"     return Math.PI * radius * radius; 
+[2m "
+,
+  
+"   } 
+[2m "
+,
+  
+"        
+[2m "
+,
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"   console.log(calculateArea(5)); 
+[2m "
+,
+  "    ",
+  "",
+  "[22m",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"
+"
+,
+  "",
+  "  • ",
+  "Thi",
+  "rd it",
+  "e",
   "m",
-  "",
-  "",
-  
-"
-"
-,
-  "",
-  "  • ",
-  "S",
-  "econd",
-  " item",
-  "",
-  "",
-  
-"
-"
-,
-  "",
-  "  • ",
-  
-"
-
-"
-,
-  "[7m",
-  "",
-  "",
-  "",
-  "",
-  
-"   console.log(a) 
-[7m "
-,
-  "",
-  "",
-  "",
-  
-"  console.log(b) 
-[7m "
-,
-  "   ",
-  "",
-  "[27m",
-  "",
-  "",
-  
-"
-"
-,
-  "",
-  "  • ",
-  "F",
-  "ourth",
-  " item",
-  "",
-  "",
-  
-"
-"
-,
-  "",
-  "  • ",
-  "Fi",
-  "fth i",
-  "tem",
 ]
 `;
