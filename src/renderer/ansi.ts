@@ -1,7 +1,7 @@
 import type { Renderer } from "../types"
 import { Token } from "../tokens"
 import { createParser } from "../parser"
-import { MarkdownStream } from "../renderer"
+import { labelToken, MarkdownStream } from "../renderer"
 import { getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
 import { Padding } from "../utils/PaddingStream"
 
@@ -62,6 +62,10 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
 
   return {
     addToken: (_, token) => {
+      // if (process.env.NODE_ENV !== "production") {
+      //   console.log(styleText("dim", "ADDTOKEN"), labelToken(token))
+      // }
+
       const prefixedNewline = firstToken ? "" : "\n"
       let startingNewlines = ""
 
@@ -142,6 +146,9 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       render?.(prefix)
     },
     endToken: (_, token) => {
+      // if (process.env.NODE_ENV !== "production") {
+      //   console.log(styleText("dim", "ENDTOKEN"), labelToken(token))
+      // }
       switch (token) {
       case Token.LIST_ORDERED:
       case Token.LIST_UNORDERED:
@@ -163,6 +170,9 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       }
     },
     addText: (_, token, text) => {
+      // if (process.env.NODE_ENV !== "production") {
+      //   console.log(styleText("dim", "ADDTEXT"), labelToken(token), JSON.stringify(text))
+      // }
       /**
        * For multiline text, we will make sure to end the ANSI sequence at the
        * end of the line, and re-start it at the beginning of the next line.

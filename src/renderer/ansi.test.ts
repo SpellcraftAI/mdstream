@@ -67,4 +67,56 @@ describe("Streaming Markdown Parser", () => {
     const result = await testStream(0)
     expect(encoder.encode(result)).toMatchSnapshot("markdown-ansi-stream-no-color")
   })
+
+  test.only("Code blocks inside of lists", async () => {
+    const input = `
+Inline code: \`inline\`
+
+Block:
+
+\`\`\`ts
+console.log("Hello, world!")
+\`\`\`
+
+Here's a list:
+
+- First item
+- Second item
+- \`\`\`
+  console.log(a)
+  console.log(b)
+  \`\`\`
+- Fourth item
+- Fifth item
+`
+
+    let buffer = ""
+    const renderedChunks: string[] = []
+  
+    const renderer = createANSIRenderer({
+      render: (chunk) => {
+        // process.stdout.write(chunk)
+        buffer += chunk
+        console.log("RENDER", JSON.stringify(chunk))
+        renderedChunks.push(chunk)
+      },
+      level: 1 // Force color
+    })
+  
+    const parser = createParser(renderer)
+    const chunkSize = 5  
+
+    // Parse the input in small chunks to simulate streaming
+    for (let i = 0; i < input.length; i += chunkSize) {
+      const chunk = input.slice(i, i + chunkSize)
+      console.log("PARSE  ", JSON.stringify(chunk))
+      parse(parser, chunk)
+    }
+  
+    finish(parser)
+    process.stdout.write(buffer)
+  
+    // Snapshot the array of input chunks
+    expect(renderedChunks).toMatchSnapshot("optimistic-code-block-parsing-input-chunks")
+  })
 })

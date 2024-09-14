@@ -3,6 +3,8 @@ import { Token, Attr } from "../tokens"
 import type { Parser } from "./types"
 import { isDigit } from "./utils"
 import { addListItem, addText, addToken, clearRootPending, continueOrAddList, endToken, endTokensUntilLength, indexOfToken } from "./lib"
+import { chalk } from "../chalk"
+// import { styleText } from "util"
 
 /**
  * Parse and render another chunk of markdown.
@@ -589,19 +591,46 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       parser.pending = char
       continue
       /* `Code Inline` */
+      /** 
+       * TODO: This fallback handles inline code in a list item, but we need the
+       * full code parsing logic, to detect a full code fence vs inline. 
+       */
     case "`":
       if (parser.token & Token.IMAGE) break
-
+      if (parser.backticksCount === 0) {
+        parser.backticksCount = 1
+      }
+      
       if ("`" === char) {
         parser.backticksCount += 1
         parser.pending = pendingWithChar
+        // console.log(chalk("CHAR_IF", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
+      } else if ("\n" === char) {
+        if (parser.backticksCount >= 3) {
+          // addText(parser)
+          addToken(parser, Token.CODE_FENCE)
+          parser.pending = ""
+          parser.backticksCount = 0
+        } else {
+          parser.pending = char
+          addText(parser)
+        }
+
       } else {
-        parser.backticksCount += 1 // started at 0, and first wasn't counted
+        if (parser.backticksCount === 1) {
+          addToken(parser, Token.CODE_INLINE)
+          parser.pending = char
+          continue
+        }
+
+        // console.log(chalk("CHAR_ELSE", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
+
         addText(parser)
-        addToken(parser, Token.CODE_INLINE)
-        parser.text = " " === char || "\n" === char ? "" : char // trim leading space
-        parser.pending = ""
+        // parser.text = ""
+        parser.pending = char
       }
+
+
       continue
     case "_":
     case "*": {
