@@ -627,8 +627,8 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
 
         // console.log(chalk("CHAR_ELSE", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
 
-        // addText(parser)
-        // parser.text = ""
+        addText(parser)
+        parser.text = ""
         parser.pending = char
       }
 
