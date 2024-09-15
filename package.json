@@ -18,20 +18,14 @@
   "files": [
     "./dist/**/*"
   ],
-  "module": "./dist/index.js",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
   "browser": "./dist/browser.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "import": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
   "scripts": {
     "dev": "bun dev.ts",
     "build-browser": "bun build src/browser.ts --bundle --minify --outdir dist --format esm --outfile browser.js",
     "build-lib": "bun build src/index.ts --bundle --minify --outdir dist --format esm",
-    "build": "bun build-lib && bun build-browser",
+    "build": "NODE_ENV=production bun build-lib && bun build-browser",
     "postbuild": "bun types",
     "types": "tsc -p tsconfig.types.json",
     "prepublishOnly": "bun run build && bun test"

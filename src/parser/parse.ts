@@ -4,14 +4,18 @@ import type { Parser } from "./types"
 import { isDigit } from "./utils"
 import { addListItem, addText, addToken, clearRootPending, continueOrAddList, endToken, endTokensUntilLength, indexOfToken } from "./lib"
 import { chalk } from "../chalk"
+import { labelToken } from "../renderer"
+import { debugLog } from "../log"
 // import { styleText } from "util"
 
 /**
  * Parse and render another chunk of markdown.
  */
 export function parse<T>(parser: Parser<T>, chunk: string): void {
+  debugLog(chalk(labelToken(parser.token), ["dim"]))
   for (const char of chunk) {
     const pendingWithChar = parser.pending + char
+    debugLog(chalk("CHAR", ["dim"]), char, "pending:", parser.pending, "pendingWithChar:", pendingWithChar)
 		
     /*
 		 Token specific checks
@@ -189,11 +193,15 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
           /*  ```lang\n
 								^
 					*/
-          addToken(parser, Token.CODE_FENCE)
+          const lang = parser.pending.slice(parser.backticksCount)
+          addToken(parser, Token.CODE_FENCE, { [Attr.LANG]: lang } )
           if (parser.pending.length > parser.backticksCount) {
-            parser.renderer.setAttr(parser.renderer.data, Attr.LANG, parser.pending.slice(parser.backticksCount))
+            parser.renderer.setAttr(parser.renderer.data, Attr.LANG, lang)
           }
+
+          // show code fences
           clearRootPending(parser)
+          // parser.pending += char
           continue
         default:
           /*  ```lang\n
@@ -309,18 +317,33 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         continue
       }
     case Token.CODE_FENCE:
+      debugLog(chalk("CODE_FENCE", ["dim"]), { char })
       switch (char) {
       case "`":
-        // console.log(chalk("CODE_FENCE", ["dim"]), { char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
+        debugLog(chalk("CODE_FENCE", ["dim"]), { escaped: parser.escaped, char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
+        
+        if (parser.escaped) {
+          parser.escaped = false
+          parser.pending = pendingWithChar
+          continue
+        }
+        
         if (parser.backticksCount >= 3) {
+          // addText(parser)
+          // parser.text += parser.pending
           addText(parser)
+          // parser.text += "\n```"
           endToken(parser)
-          parser.pending = ""
           parser.backticksCount = 0
           parser.codeFenceBody = 0
         } else {
           parser.pending = pendingWithChar
         }
+        continue
+      case "\\":
+        parser.escaped = true
+        // parser.pending = pendingWithChar
+        debugLog(chalk("\\", ["dim"]), { escaped: parser.escaped })
         continue
       case "\n":
         parser.text   += parser.pending
@@ -334,8 +357,16 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         continue
       }
     case Token.CODE_INLINE:
+      debugLog(chalk("CODE_INLINE", ["dim"]), { escaped: parser.escaped, char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
+
       switch (char) {
       case "`":
+        if (parser.escaped) {
+          parser.escaped = false
+          parser.pending = pendingWithChar
+          continue
+        }
+
         if (pendingWithChar.length ===
 				    parser.backticksCount + Number(parser.pending[0] === " ") // 0 or 1 for space
         ) {
@@ -346,6 +377,9 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         } else {
           parser.pending = pendingWithChar
         }
+        continue
+      case "\\":
+        parser.escaped = true
         continue
       case "\n":
         parser.text += parser.pending
@@ -566,9 +600,11 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
     /*
 		Common checks
 		*/
+    debugLog(chalk("PENDING", ["dim"]), { char, pendingWithChar })
     switch (parser.pending[0]) {
     /* Escape character */
     case "\\":
+      debugLog(chalk("ESCAPE", ["dim"]), { char, pendingWithChar })
       if ("\n" === char) {
         // Escaped newline has the same affect as unescaped one
         parser.pending = char
@@ -603,7 +639,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       if ("`" === char) {
         parser.backticksCount += 1
         parser.pending = pendingWithChar
-        // console.log(chalk("CHAR_IF", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
+        debugLog(chalk("CHAR_IF", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
       } else if ("\n" === char) {
         if (parser.backticksCount >= 3) {
           // addText(parser)
@@ -616,20 +652,20 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
           parser.pending = char
           addText(parser)
         }
-
       } else {
-        if (parser.backticksCount === 1) {
+        if (parser.backticksCount >= 1) {
           parser.pending = char
           addText(parser)
           addToken(parser, Token.CODE_INLINE)
           continue
         }
 
-        // console.log(chalk("CHAR_ELSE", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
+        // debugLog(chalk("CHAR_ELSE", ["dim"]), char, "pending:", parser.pending, "backticks:", parser.backticksCount)
 
         addText(parser)
         parser.text = ""
         parser.pending = char
+        parser.backticksCount = 0
       }
 
 

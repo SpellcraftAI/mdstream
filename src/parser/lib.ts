@@ -1,5 +1,5 @@
 import { Token } from "../tokens"
-import type { Renderer } from "../renderer"
+import type { NodeAttrs, Renderer } from "../renderer"
 
 import { parse } from "./parse"
 import type { Parser } from "./types"
@@ -24,6 +24,7 @@ export function createParser<T>(renderer: Renderer<T>): Parser<T> {
     spaces    : new Uint8Array(TOKEN_ARRAY_CAP),
     indent    : "",
     indentLength: 0,
+    escaped   : false
   }
 }
 
@@ -51,11 +52,11 @@ export function endToken<T>(parser: Parser<T>): void {
   parser.renderer.endToken(parser.renderer.data, parser.tokens[parser.len + 1])
 }
 
-export function addToken<T>(parser: Parser<T>, token: Token): void {
+export function addToken<T>(parser: Parser<T>, token: Token, attrs?: NodeAttrs): void {
   parser.len += 1
   parser.tokens[parser.len] = token
   parser.token = token
-  parser.renderer.addToken(parser.renderer.data, token)
+  parser.renderer.addToken(parser.renderer.data, token, attrs)
 }
 
 export function indexOfToken<T>(parser: Parser<T>, token: Token, startIndex: number): number {

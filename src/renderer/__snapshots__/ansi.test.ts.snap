@@ -12,12 +12,27 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
   "",
   "[7m",
   " ",
+  "<tick",
+  ">\`<ti",
+  "ck>",
+  " ",
+  "[27m",
+  " / ",
+  "",
+  "[7m",
+  " ",
   "inline",
+  " test",
+  " \` t",
+  "est",
   " ",
   "[27m",
   " ",
   "",
-  "",
+  
+"
+"
+,
   "",
   "",
   
@@ -26,59 +41,70 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "Here",
-  "'s a ",
-  "Pytho",
-  "n fun",
-  "ction",
-  " to g",
-  "reet ",
-  "someo",
-  "ne:",
+  "H",
+  "ere's",
+  " a Py",
+  "thon ",
+  "funct",
+  "ion t",
+  "o gre",
+  "et so",
+  "meone",
+  ":",
   
 "
 
 "
 ,
-  "[2m",
-  "",
-  "",
-  "",
-  "",
   "",
   
-"    def greet(name): 
-[2m "
+"   [2m\`\`\`python[22m
+"
+,
+  " ",
+  "  def",
+  " gree",
+  "t(nam",
+  
+"e):
+ "
+,
+  "     ",
+  " retu",
+  "rn f"",
+  "Hello",
+  ", {na",
+  "me}!"",
+  
+"
+   "
+,
+  
+"
+   pr"
+,
+  "int(g",
+  "reet(",
+  ""Worl",
+  "d"))",
+  
+"
+   "
+,
+  
+"
+   [2m\`\`\`[22m"
 ,
   "",
   "",
   "",
   "",
   "",
-  
-"       return f"Hello, {name}!" 
-[2m "
-,
-  
-"                                   
-[2m "
-,
-  "",
-  "",
-  "",
   "",
   
-"   print(greet("World")) 
-[2m "
+"
+"
 ,
-  "    ",
-  "",
-  "[22m",
-  "",
-  "",
-  "",
-  "",
-  "",
   "",
   "",
   
@@ -87,31 +113,65 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "N",
-  "ow, l",
-  "et's ",
-  "try a",
-  " Java",
-  "Scrip",
-  "t exa",
-  "mple:",
+  "Now",
+  ", let",
+  "'s tr",
+  "y a J",
+  "avaSc",
+  "ript ",
+  "examp",
+  "le:",
   
 "
 
 "
 ,
-  "[2m",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
   "",
   
-"    function calculateArea(radius) { 
-[2m "
+"   [2m\`\`\`javascript[22m
+"
+,
+  "   fu",
+  "nctio",
+  "n cal",
+  "culat",
+  "eArea",
+  "(radi",
+  "us) {",
+  
+"
+    "
+,
+  " retu",
+  "rn Ma",
+  "th.PI",
+  " * ra",
+  "dius ",
+  "* rad",
+  "ius;",
+  
+"
+   }"
+,
+  
+"
+   
+ "
+,
+  "  con",
+  "sole.",
+  "log(c",
+  "alcul",
+  "ateAr",
+  "ea(5)",
+  
+");
+  "
+,
+  " ",
+  
+"
+   [2m\`\`\`[22m"
 ,
   "",
   "",
@@ -119,37 +179,10 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
   "",
   "",
   "",
-  "",
   
-"     return Math.PI * radius * radius; 
-[2m "
+"
+"
 ,
-  
-"   } 
-[2m "
-,
-  
-"        
-[2m "
-,
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  
-"   console.log(calculateArea(5)); 
-[2m "
-,
-  "    ",
-  "",
-  "[22m",
-  "",
-  "",
-  "",
-  "",
-  "",
   "",
   "",
   
@@ -158,9 +191,67 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "Thi",
-  "rd it",
-  "e",
-  "m",
+  "Third",
+  " item",
+  "",
+  "",
+  "",
+  "",
+  
+"
+
+"
+,
+  "",
+  
+"[2m\`\`\`[22m
+"
+,
+  "conso",
+  "le.lo",
+  "g("",
+  "\`")",
+  
+"
+[2m\`\`\`[22m"
+,
+  "",
+  "",
+  
+"
+
+"
+,
+  "",
+  "",
+  
+"
+
+"
+,
+  "",
+  
+"[2m\`\`\`javascript[22m
+"
+,
+  "cons",
+  "ole.l",
+  "og(",
+  "\`${foo",
+  "}\`)",
+  
+"
+[2m\`\`\`[22m"
+,
+  "",
+  "",
+  
+"
+"
+,
+  "",
+  "",
+  "",
+  "",
 ]
 `;

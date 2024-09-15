@@ -1,9 +1,8 @@
 import type { Renderer } from "../types"
-import { Token } from "../tokens"
+import { Attr, Token } from "../tokens"
 import { createParser } from "../parser"
-import { labelToken, MarkdownStream } from "../renderer"
+import { MarkdownStream } from "../renderer"
 import { chalk, getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
-import { Padding } from "../utils/PaddingStream"
 
 const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.DOCUMENT]: [],
@@ -16,8 +15,8 @@ const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.HEADING_6]: ["bold"],
   [Token.BLOCKQUOTE]: ["dim"],
   [Token.CODE_INLINE]: ["inverse"],
-  [Token.CODE_BLOCK]: ["dim"],
-  [Token.CODE_FENCE]: ["dim"],
+  [Token.CODE_BLOCK]: [],
+  [Token.CODE_FENCE]: [],
   [Token.LIST_UNORDERED]: [],
   [Token.LIST_ORDERED]: [],
   [Token.LIST_ITEM]: [],
@@ -57,11 +56,11 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
   let prefix = ""
   let suffix = ""
 
-  let padding: Padding
+  // let padding: Padding
   const activeStyles: AnsiPair[] = []
 
   return {
-    addToken: (_, token) => {
+    addToken: (_, token, attrs) => {
       // if (process.env.NODE_ENV !== "production") {
       //   console.log(chalk("ADD_TOKEN", ["dim"]), labelToken(token))
       // }
@@ -98,12 +97,15 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         /**
          * Create a new padding stream for this block.
          */
-        padding = new Padding(1, 1, " ")
+        // padding = new Padding(0, 0, " ")
         startingNewlines = prefixedNewline.repeat(2)
+        
+        const lang = attrs?.[Attr.LANG] ?? ""
+        prefix = " ".repeat(listLevel * 3) + chalk(`\`\`\`${lang}`, ["dim"]) + "\n"
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
-        // startingNewlines = prefixedNewline
+        startingNewlines = prefixedNewline
         listLevel += 1
         break
       case Token.LIST_ITEM:
@@ -157,7 +159,8 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
 
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:
-        render?.(padding.flush())
+        // render?.(padding.flush())
+        render?.("\n" + " ".repeat(listLevel * 3) + chalk("```", ["dim"]))
         break
       }
 
@@ -169,7 +172,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         render?.(tags.close)
       }
     },
-    addText: (_, token, text) => {
+    addText: (_, __, text) => {
       // if (process.env.NODE_ENV !== "production") {
       //   console.log(chalk("ADD_TEXT", ["dim"]), labelToken(token), JSON.stringify(text))
       // }
@@ -186,13 +189,12 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       //   text = lines.join("\n" + openTags)
       // }
 
-      switch (token) {
-      case Token.CODE_BLOCK:
-      case Token.CODE_FENCE:
-        text = padding.processChunk(text)
-        // render?.(wrapLinesWithStyles(padded, activeStyles))
-        break
-      }
+      // switch (token) {
+      // case Token.CODE_BLOCK:
+      // case Token.CODE_FENCE:
+      //   text = padding.processChunk(text)
+      //   break
+      // }
 
       const withStyledLines = wrapLinesWithStyles(text, activeStyles)
       render?.(withStyledLines)
