@@ -1,8 +1,9 @@
 import type { Renderer } from "../types"
 import { Attr, Token } from "../tokens"
 import { createParser } from "../parser"
-import { MarkdownStream } from "../renderer"
+import { labelToken, MarkdownStream } from "../renderer"
 import { chalk, getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
+import { debugLog } from "../log"
 
 const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.DOCUMENT]: [],
@@ -61,9 +62,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
 
   return {
     addToken: (_, token, attrs) => {
-      // if (process.env.NODE_ENV !== "production") {
-      //   console.log(chalk("ADD_TOKEN", ["dim"]), labelToken(token))
-      // }
+      debugLog(chalk("ADD_TOKEN", ["dim"]), labelToken(token))
 
       const prefixedNewline = firstToken ? "" : "\n"
       let startingNewlines = ""
@@ -148,9 +147,8 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       render?.(prefix)
     },
     endToken: (_, token) => {
-      // if (process.env.NODE_ENV !== "production") {
-      //   console.log(styleText("dim", "ENDTOKEN"), labelToken(token))
-      // }
+      debugLog(chalk("END_TOKEN", ["dim"]), labelToken(token))
+
       switch (token) {
       case Token.LIST_ORDERED:
       case Token.LIST_UNORDERED:
@@ -172,10 +170,8 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         render?.(tags.close)
       }
     },
-    addText: (_, __, text) => {
-      // if (process.env.NODE_ENV !== "production") {
-      //   console.log(chalk("ADD_TEXT", ["dim"]), labelToken(token), JSON.stringify(text))
-      // }
+    addText: (_, token, text) => {
+      debugLog(chalk("ADD_TEXT", ["dim"]), labelToken(token), JSON.stringify(text))
       /**
        * For multiline text, we will make sure to end the ANSI sequence at the
        * end of the line, and re-start it at the beginning of the next line.

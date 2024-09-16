@@ -357,26 +357,39 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         continue
       }
     case Token.CODE_INLINE:
-      debugLog(chalk("CODE_INLINE", ["dim"]), { escaped: parser.escaped, char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
-
-      switch (char) {
-      case "`":
+      if (char === "`") {
         if (parser.escaped) {
           parser.escaped = false
           parser.pending = pendingWithChar
           continue
-        }
+        } else if (parser.doubleBacktickCode) {
+          if (parser.backticksCount >= 2) {
+            addText(parser)
+            endToken(parser)
+            parser.backticksCount = 0
+            parser.pending = ""
+            parser.doubleBacktickCode = false
+          } else {
+            parser.pending += char
+          }
 
-        if (pendingWithChar.length ===
-				    parser.backticksCount + Number(parser.pending[0] === " ") // 0 or 1 for space
-        ) {
-          addText(parser)
-          endToken(parser)
-          parser.pending = ""
-          parser.backticksCount = 0
-        } else {
-          parser.pending = pendingWithChar
-        }
+          parser.backticksCount += 1
+          continue
+        } 
+      }
+
+      debugLog(chalk("CODE_INLINE", ["dim"]), { escaped: parser.escaped, doubleBackticks: parser.doubleBacktickCode, char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
+
+      switch (char) {
+      case "`":
+        // parser.pending = pendingWithChar
+        parser.text += parser.pending
+        parser.pending = ""
+        addText(parser)
+        endToken(parser)
+  
+        // parser.pending = 
+        parser.backticksCount = 0
         continue
       case "\\":
         parser.escaped = true
@@ -655,6 +668,13 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       } else {
         if (parser.backticksCount >= 1) {
           parser.pending = char
+          // parser.backticksCount = 1
+
+          if (parser.backticksCount === 2) {
+            parser.doubleBacktickCode = true
+          }
+          
+          parser.backticksCount = 0
           addText(parser)
           addToken(parser, Token.CODE_INLINE)
           continue

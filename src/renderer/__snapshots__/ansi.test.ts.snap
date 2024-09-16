@@ -12,19 +12,36 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
   "",
   "[7m",
   " ",
-  "<tick",
-  ">\`<ti",
-  "ck>",
+  "0",
   " ",
   "[27m",
-  " / ",
+  " to",
+  " ",
   "",
   "[7m",
   " ",
-  "inline",
-  " test",
-  " \` t",
-  "est",
+  "1",
+  " ",
+  "[27m",
+  ",",
+  " ",
+  "",
+  "[7m",
+  " ",
+  "<ti",
+  "ck>\`<",
+  "tick>",
+  " ",
+  "[27m",
+  " /",
+  " ",
+  "",
+  "[7m",
+  " ",
+  "inli",
+  "ne te",
+  "st",
+  " \` test",
   " ",
   "[27m",
   " ",
@@ -41,16 +58,15 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "H",
-  "ere's",
-  " a Py",
-  "thon ",
-  "funct",
-  "ion t",
-  "o gre",
-  "et so",
-  "meone",
-  ":",
+  "Here",
+  "'s a ",
+  "Pytho",
+  "n fun",
+  "ction",
+  " to g",
+  "reet ",
+  "someo",
+  "ne:",
   
 "
 
@@ -61,34 +77,33 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "   [2m\`\`\`python[22m
 "
 ,
-  " ",
-  "  def",
-  " gree",
-  "t(nam",
-  
-"e):
- "
-,
-  "     ",
-  " retu",
-  "rn f"",
-  "Hello",
-  ", {na",
-  "me}!"",
+  "   d",
+  "ef gr",
+  "eet(n",
+  "ame):",
   
 "
+    "
+,
+  "   re",
+  "turn ",
+  "f"Hel",
+  "lo, {",
+  "name}",
+  
+"!"
+  "
+,
+  
+" 
    "
 ,
+  "print",
+  "(gree",
+  "t("Wo",
+  "rld")",
   
-"
-   pr"
-,
-  "int(g",
-  "reet(",
-  ""Worl",
-  "d"))",
-  
-"
+")
    "
 ,
   
@@ -113,14 +128,14 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "Now",
-  ", let",
-  "'s tr",
-  "y a J",
-  "avaSc",
-  "ript ",
-  "examp",
-  "le:",
+  "N",
+  "ow, l",
+  "et's ",
+  "try a",
+  " Java",
+  "Scrip",
+  "t exa",
+  "mple:",
   
 "
 
@@ -131,44 +146,46 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "   [2m\`\`\`javascript[22m
 "
 ,
-  "   fu",
-  "nctio",
-  "n cal",
-  "culat",
-  "eArea",
-  "(radi",
-  "us) {",
-  
-"
-    "
-,
-  " retu",
-  "rn Ma",
-  "th.PI",
-  " * ra",
-  "dius ",
-  "* rad",
-  "ius;",
-  
-"
-   }"
-,
-  
-"
-   
- "
-,
-  "  con",
-  "sole.",
-  "log(c",
+  "   ",
+  "funct",
+  "ion c",
   "alcul",
   "ateAr",
-  "ea(5)",
+  "ea(ra",
+  "dius)",
   
-");
+" {
   "
 ,
-  " ",
+  "   re",
+  "turn ",
+  "Math.",
+  "PI * ",
+  "radiu",
+  "s * r",
+  "adius",
+  
+";
+   "
+,
+  
+"}
+   "
+,
+  
+"
+   c"
+,
+  "onsol",
+  "e.log",
+  "(calc",
+  "ulate",
+  "Area(",
+  "5));",
+  
+"
+   "
+,
   
 "
    [2m\`\`\`[22m"
@@ -191,8 +208,9 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   "  • ",
-  "Third",
-  " item",
+  "Thi",
+  "rd it",
+  "em",
   "",
   "",
   "",
@@ -207,9 +225,9 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "[2m\`\`\`[22m
 "
 ,
-  "conso",
-  "le.lo",
-  "g("",
+  "con",
+  "sole.",
+  "log("",
   "\`")",
   
 "
@@ -234,11 +252,12 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "[2m\`\`\`javascript[22m
 "
 ,
-  "cons",
-  "ole.l",
-  "og(",
-  "\`${foo",
-  "}\`)",
+  "co",
+  "nsole",
+  ".log(",
+  "\`${f",
+  "oo}",
+  "\`)",
   
 "
 [2m\`\`\`[22m"

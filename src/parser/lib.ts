@@ -24,7 +24,8 @@ export function createParser<T>(renderer: Renderer<T>): Parser<T> {
     spaces    : new Uint8Array(TOKEN_ARRAY_CAP),
     indent    : "",
     indentLength: 0,
-    escaped   : false
+    escaped   : false,
+    doubleBacktickCode: false,
   }
 }
 

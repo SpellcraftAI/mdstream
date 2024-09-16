@@ -16,5 +16,7 @@ export interface Parser<T> {
   blockquoteIndex: number;
   hrChar: string;
   hrChars: number;
+
   escaped: boolean;
+  doubleBacktickCode: boolean;
 }

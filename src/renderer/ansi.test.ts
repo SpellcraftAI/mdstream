@@ -69,8 +69,8 @@ describe("Streaming Markdown Parser", () => {
   })
 
   test.only("Code blocks inside of lists", async () => {
-    const input = "Inline code: ``<tick>`<tick>`` / `inline test \\` test`\n1. Here's a Python function to greet someone:\n   ```python\n   def greet(name):\n       return f\"Hello, {name}!\"\n   \n   print(greet(\"World\"))\n   ```\n\n2. Now, let's try a JavaScript example:\n   ```javascript\n   function calculateArea(radius) {\n     return Math.PI * radius * radius;\n   }\n   \n   console.log(calculateArea(5));\n   ```\n\n3. Third item\n\n```\nconsole.log(\"\\`\")\n```\n```javascript\nconsole.log(\\`${foo}\\`)\n```\n"
-    // const input = "```javascript\nconsole.log(\\`${foo}\\`)\n```\n"
+    const input = "Inline code: `0` to `1`, ``<tick>`<tick>`` / `inline test \\` test`\n1. Here's a Python function to greet someone:\n   ```python\n   def greet(name):\n       return f\"Hello, {name}!\"\n   \n   print(greet(\"World\"))\n   ```\n\n2. Now, let's try a JavaScript example:\n   ```javascript\n   function calculateArea(radius) {\n     return Math.PI * radius * radius;\n   }\n   \n   console.log(calculateArea(5));\n   ```\n\n3. Third item\n\n```\nconsole.log(\"\\`\")\n```\n```javascript\nconsole.log(\\`${foo}\\`)\n```\n"
+    // const input = "`0` to `1` | ``<tick>`</tick>`` | test"
     let buffer = ""
     const renderedChunks: string[] = []
   
