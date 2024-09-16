@@ -77,44 +77,50 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "   [2m\`\`\`python[22m
 "
 ,
-  "   d",
-  "ef gr",
-  "eet(n",
-  "ame):",
+  "",
+  "",
+  "",
+  "",
   
-"
-    "
-,
-  "   re",
-  "turn ",
-  "f"Hel",
-  "lo, {",
-  "name}",
-  
-"!"
-  "
-,
-  
-" 
+"      def greet(name):
    "
 ,
-  "print",
-  "(gree",
-  "t("Wo",
-  "rld")",
+  "",
+  "",
+  "",
+  "",
+  "",
   
-")
+"       return f"Hello, {name}!"
    "
 ,
+  
+"                                  
+   "
+,
+  "",
+  "",
+  "",
+  "",
+  
+"   print(greet("World"))
+   "
+,
+  "   ",
   
 "
    [2m\`\`\`[22m"
 ,
   "",
+  
+"
+   [2m\`\`\`[22m"
+,
   "",
-  "",
-  "",
-  "",
+  
+"
+   [2m\`\`\`[22m"
+,
   "",
   
 "
@@ -146,55 +152,61 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "   [2m\`\`\`javascript[22m
 "
 ,
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"      function calculateArea(radius) {
+   "
+,
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"     return Math.PI * radius * radius;
+   "
+,
+  
+"   }
+   "
+,
+  
+"       
+   "
+,
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  
+"   console.log(calculateArea(5));
+   "
+,
   "   ",
-  "funct",
-  "ion c",
-  "alcul",
-  "ateAr",
-  "ea(ra",
-  "dius)",
-  
-" {
-  "
-,
-  "   re",
-  "turn ",
-  "Math.",
-  "PI * ",
-  "radiu",
-  "s * r",
-  "adius",
-  
-";
-   "
-,
-  
-"}
-   "
-,
-  
-"
-   c"
-,
-  "onsol",
-  "e.log",
-  "(calc",
-  "ulate",
-  "Area(",
-  "5));",
-  
-"
-   "
-,
   
 "
    [2m\`\`\`[22m"
 ,
   "",
+  
+"
+   [2m\`\`\`[22m"
+,
   "",
-  "",
-  "",
-  "",
+  
+"
+   [2m\`\`\`[22m"
+,
   "",
   
 "
@@ -225,15 +237,15 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "[2m\`\`\`[22m
 "
 ,
-  "con",
-  "sole.",
-  "log("",
-  "\`")",
+  "",
+  "",
+  "",
+  "",
+  "console.log("\`")",
   
 "
 [2m\`\`\`[22m"
 ,
-  "",
   "",
   
 "
@@ -252,17 +264,17 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 "[2m\`\`\`javascript[22m
 "
 ,
-  "co",
-  "nsole",
-  ".log(",
-  "\`${f",
-  "oo}",
-  "\`)",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "console.log(\`${foo}\`)",
   
 "
 [2m\`\`\`[22m"
 ,
-  "",
   "",
   
 "

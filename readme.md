@@ -262,3 +262,8 @@ Displaying this README as a demo with delayed chunks:
 - [ ] Superscript
 - [ ] Emoji Shortcodes
 - [ ] Html tags (e.g. `<div>`, `<span>`, `<a>`, `<img>`, etc.)
+- Code blocks in lists
+
+  ```ts
+  test
+  ```

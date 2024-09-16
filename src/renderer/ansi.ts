@@ -4,6 +4,7 @@ import { createParser } from "../parser"
 import { labelToken, MarkdownStream } from "../renderer"
 import { chalk, getStyleTags, setColorLevel, type AnsiPair, type AnsiStyle, type ColorSupportLevel } from "../chalk"
 import { debugLog } from "../log"
+import { Padding } from "../utils/PaddingStream"
 
 const ANSI_STYLES: Partial<Record<Token, AnsiStyle[]>> = {
   [Token.DOCUMENT]: [],
@@ -57,7 +58,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
   let prefix = ""
   let suffix = ""
 
-  // let padding: Padding
+  let padding: Padding
   const activeStyles: AnsiPair[] = []
 
   return {
@@ -96,11 +97,12 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         /**
          * Create a new padding stream for this block.
          */
-        // padding = new Padding(0, 0, " ")
+        padding = new Padding(listLevel * 3, 0, " ")
         startingNewlines = prefixedNewline.repeat(2)
         
         const lang = attrs?.[Attr.LANG] ?? ""
         prefix = " ".repeat(listLevel * 3) + chalk(`\`\`\`${lang}`, ["dim"]) + "\n"
+        suffix = "\n" + " ".repeat(listLevel * 3) + chalk("```", ["dim"])
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
@@ -157,8 +159,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
 
       case Token.CODE_BLOCK:
       case Token.CODE_FENCE:
-        // render?.(padding.flush())
-        render?.("\n" + " ".repeat(listLevel * 3) + chalk("```", ["dim"]))
+        render?.(padding.flush())
         break
       }
 
@@ -171,7 +172,7 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       }
     },
     addText: (_, token, text) => {
-      debugLog(chalk("ADD_TEXT", ["dim"]), labelToken(token), JSON.stringify(text))
+      debugLog(chalk("ADD_TEXT", ["dim"]), labelToken(token), { listLevel}, JSON.stringify(text))
       /**
        * For multiline text, we will make sure to end the ANSI sequence at the
        * end of the line, and re-start it at the beginning of the next line.
@@ -185,12 +186,12 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       //   text = lines.join("\n" + openTags)
       // }
 
-      // switch (token) {
-      // case Token.CODE_BLOCK:
-      // case Token.CODE_FENCE:
-      //   text = padding.processChunk(text)
-      //   break
-      // }
+      switch (token) {
+      case Token.CODE_BLOCK:
+      case Token.CODE_FENCE:
+        text = padding.processChunk(text)
+        break
+      }
 
       const withStyledLines = wrapLinesWithStyles(text, activeStyles)
       render?.(withStyledLines)

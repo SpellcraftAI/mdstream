@@ -42,6 +42,7 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         continue
         /* Ignore newlines in root */
       case "\n":
+        // debugLog("END TOKENS UNTIL LENGTH")
         endTokensUntilLength(parser, parser.blockquoteIndex)
         parser.blockquoteIndex = 0
         parser.backticksCount = 0
@@ -639,10 +640,10 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       parser.pending = char
       continue
       /* `Code Inline` */
-      /** 
-       * TODO: This fallback handles inline code in a list item, but we need the
-       * full code parsing logic, to detect a full code fence vs inline. 
-       */
+    /** 
+     * TODO: This fallback handles inline code in a list item, but we need the
+     * full code parsing logic, to detect a full code fence vs inline. 
+     */
     case "`":
       if (parser.token & Token.IMAGE) break
       if (parser.backticksCount === 0) {
