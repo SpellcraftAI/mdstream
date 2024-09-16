@@ -4,6 +4,7 @@ import { readFile } from "fs/promises"
 import { createANSIRenderer, MarkdownANSIStream } from "."
 import { createParser, parse, finish } from "../parser"
 import type { ColorSupportLevel } from "../chalk"
+import { resolve } from "path"
 
 const encoder = new TextEncoder()
 
@@ -69,8 +70,18 @@ describe("Streaming Markdown Parser", () => {
   })
 
   test.only("Code blocks inside of lists", async () => {
-    const input = "Inline code: `0` to `1`, ``<tick>`<tick>`` / `inline test \\` test`\n1. Here's a Python function to greet someone:\n   ```python\n   def greet(name):\n       return f\"Hello, {name}!\"\n   \n   print(greet(\"World\"))\n   ```\n\n2. Now, let's try a JavaScript example:\n   ```javascript\n   function calculateArea(radius) {\n     return Math.PI * radius * radius;\n   }\n   \n   console.log(calculateArea(5));\n   ```\n\n3. Third item\n\n```\nconsole.log(\"\\`\")\n```\n```javascript\nconsole.log(\\`${foo}\\`)\n```\n"
-    // const input = "1. Python code block:\n\n```python\ndef greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet(\"World\"))\n```\n\n2. JavaScript code block"
+    const input = await new Response(Bun.file(new URL("ansi.test.md", import.meta.url))).text()
+    // const input = "1. Here's a Python function to greet someone:\n   ```python\n   def greet(name):\n       return f\"Hello, {name}!\"\n   \n   print(greet(\"World\"))\n   ```\n\n2. Now"
+    // const input = "\`\`\`js\nbacktick: \`\n\`\`\`"
+    //     const input = `### \`parse\` function
+
+    // Test
+
+    // \`\`\`js
+    // parse(parser, "# Streaming Markdown\\n\\n")
+    // \`\`\`
+    // `
+
     let buffer = ""
     const renderedChunks: string[] = []
   
@@ -81,7 +92,7 @@ describe("Streaming Markdown Parser", () => {
         console.log("RENDER", JSON.stringify(chunk))
         renderedChunks.push(chunk)
       },
-      level: 1 // Force color
+      level: 3 // Force color
     })
   
     const parser = createParser(renderer)

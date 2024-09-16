@@ -44,7 +44,7 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
   " \` test",
   " ",
   "[27m",
-  " ",
+  "",
   "",
   
 "
@@ -74,53 +74,46 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   
-"   [2m\`\`\`python[22m
+"  [2m\`\`\`python[22m
 "
 ,
-  "",
-  "",
-  "",
-  "",
-  
-"      def greet(name):
-   "
-,
-  "",
-  "",
-  "",
-  "",
-  "",
-  
-"       return f"Hello, {name}!"
-   "
-,
-  
-"                                  
-   "
-,
-  "",
-  "",
-  "",
-  "",
-  
-"   print(greet("World"))
-   "
-,
-  "   ",
+  "   d",
+  "ef gr",
+  "eet(n",
+  "ame):",
   
 "
-   [2m\`\`\`[22m"
+    "
 ,
-  "",
+  "   re",
+  "turn ",
+  "f"Hel",
+  "lo, {",
+  "name}",
+  
+"!"
+  "
+,
+  
+" 
+   "
+,
+  "print",
+  "(gree",
+  "t("Wo",
+  "rld")",
+  
+")
+   "
+,
   
 "
-   [2m\`\`\`[22m"
+  [2m\`\`\`[22m"
 ,
   "",
-  
-"
-   [2m\`\`\`[22m"
-,
+  "",
+  "",
+  "",
   "",
   
 "
@@ -149,64 +142,57 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   
-"   [2m\`\`\`javascript[22m
+"  [2m\`\`\`javascript[22m
 "
-,
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  
-"      function calculateArea(radius) {
-   "
-,
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  
-"     return Math.PI * radius * radius;
-   "
-,
-  
-"   }
-   "
-,
-  
-"       
-   "
-,
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  
-"   console.log(calculateArea(5));
-   "
 ,
   "   ",
+  "funct",
+  "ion c",
+  "alcul",
+  "ateAr",
+  "ea(ra",
+  "dius)",
+  
+" {
+  "
+,
+  "   re",
+  "turn ",
+  "Math.",
+  "PI * ",
+  "radiu",
+  "s * r",
+  "adius",
+  
+";
+   "
+,
+  
+"}
+   "
+,
   
 "
-   [2m\`\`\`[22m"
+   c"
+,
+  "onsol",
+  "e.log",
+  "(calc",
+  "ulate",
+  "Area(",
+  "5));",
+  
+"
+   "
+,
+  
+"
+  [2m\`\`\`[22m"
 ,
   "",
-  
-"
-   [2m\`\`\`[22m"
-,
   "",
-  
-"
-   [2m\`\`\`[22m"
-,
+  "",
+  "",
   "",
   
 "
@@ -223,9 +209,28 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
   "Thi",
   "rd it",
   "em",
+  
+"
+
+"
+,
   "",
-  "",
-  "",
+  
+"  [2m\`\`\`[22m
+"
+,
+  "  ",
+  "conso",
+  "le.lo",
+  "g("",
+  
+"\`")
+  "
+,
+  
+"
+  [2m\`\`\`[22m"
+,
   "",
   
 "
@@ -234,55 +239,60 @@ exports[`Streaming Markdown Parser Code blocks inside of lists: optimistic-code-
 ,
   "",
   
-"[2m\`\`\`[22m
+"  [2m\`\`\`javascript[22m
 "
 ,
-  "",
-  "",
-  "",
-  "",
-  "console.log("\`")",
+  "  con",
+  "sole.",
+  "log(",
+  "\`${fo",
+  "o}\`)",
   
 "
-[2m\`\`\`[22m"
+  "
+,
+  
+"
+  [2m\`\`\`[22m"
 ,
   "",
+  "",
+  "",
+  "",
+  "",
+  
+"
+"
+,
+  "",
+  "",
+  
+"
+"
+,
+  "",
+  "  • ",
+  "B",
+  "ackti",
+  "ck:",
   
 "
 
 "
 ,
   "",
-  "",
   
-"
-
+"  [2m\`\`\`[22m
 "
 ,
-  "",
-  
-"[2m\`\`\`javascript[22m
-"
-,
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "console.log(\`${foo}\`)",
+  "  b",
+  "ackti",
+  "ck: ",
+  "\`",
   
 "
-[2m\`\`\`[22m"
+  [2m\`\`\`[22m"
 ,
-  "",
-  
-"
-"
-,
-  "",
-  "",
-  "",
   "",
 ]
 `;

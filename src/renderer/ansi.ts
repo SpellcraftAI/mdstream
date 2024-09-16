@@ -97,12 +97,12 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         /**
          * Create a new padding stream for this block.
          */
-        padding = new Padding(listLevel * 3, 0, " ")
+        // padding = new Padding(0, 0, " ")
         startingNewlines = prefixedNewline.repeat(2)
         
         const lang = attrs?.[Attr.LANG] ?? ""
-        prefix = " ".repeat(listLevel * 3) + chalk(`\`\`\`${lang}`, ["dim"]) + "\n"
-        suffix = "\n" + " ".repeat(listLevel * 3) + chalk("```", ["dim"])
+        prefix = " ".repeat(listLevel * 2) + chalk(`\`\`\`${lang}`, ["dim"]) + "\n"
+        suffix = "\n" + " ".repeat(listLevel * 2) + chalk("```", ["dim"])
         break
       case Token.LIST_UNORDERED:
       case Token.LIST_ORDERED:
@@ -146,7 +146,9 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         render?.(tags.open)
         activeStyles.push(tags)
       }
+
       render?.(prefix)
+      prefix = ""
     },
     endToken: (_, token) => {
       debugLog(chalk("END_TOKEN", ["dim"]), labelToken(token))
@@ -157,13 +159,15 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
         listLevel -= 1
         break
 
-      case Token.CODE_BLOCK:
-      case Token.CODE_FENCE:
-        render?.(padding.flush())
-        break
+      // case Token.CODE_BLOCK:
+      // case Token.CODE_FENCE:
+      //   render?.(padding.flush())
+      //   break
       }
 
       render?.(suffix)
+      suffix = ""
+      
       const styles = ANSI_STYLES[token]
       if (styles) {
         const tags = getStyleTags(styles)
@@ -186,12 +190,12 @@ export function createANSIRenderer({ render, level }: ANSIRendererOptions = {}):
       //   text = lines.join("\n" + openTags)
       // }
 
-      switch (token) {
-      case Token.CODE_BLOCK:
-      case Token.CODE_FENCE:
-        text = padding.processChunk(text)
-        break
-      }
+      // switch (token) {
+      // case Token.CODE_BLOCK:
+      // case Token.CODE_FENCE:
+      //   text = padding.processChunk(text)
+      //   break
+      // }
 
       const withStyledLines = wrapLinesWithStyles(text, activeStyles)
       render?.(withStyledLines)

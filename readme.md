@@ -266,4 +266,6 @@ Displaying this README as a demo with delayed chunks:
 
   ```ts
   test
+  backticks: `
+  backticks: `
   ```

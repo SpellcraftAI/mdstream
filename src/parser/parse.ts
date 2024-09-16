@@ -321,11 +321,13 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
       debugLog(chalk("CODE_FENCE", ["dim"]), { char })
       switch (char) {
       case "`":
+        parser.backticksCount += 1
         debugLog(chalk("CODE_FENCE", ["dim"]), { escaped: parser.escaped, char, pendingWithChar, backticksCount: parser.backticksCount, codeFenceBody: parser.codeFenceBody })
         
         if (parser.escaped) {
           parser.escaped = false
           parser.pending = pendingWithChar
+          parser.backticksCount -= 1
           continue
         }
         
@@ -350,13 +352,18 @@ export function parse<T>(parser: Parser<T>, chunk: string): void {
         parser.text   += parser.pending
         parser.pending = char
         parser.codeFenceBody = 1
+        parser.backticksCount = 0
+        parser.escaped = false
         continue
       default:
         parser.text   += pendingWithChar
         parser.pending = ""
         parser.codeFenceBody = 1
+        parser.backticksCount = 0
+        parser.escaped = false
         continue
       }
+
     case Token.CODE_INLINE:
       if (char === "`") {
         if (parser.escaped) {
